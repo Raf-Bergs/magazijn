@@ -5,8 +5,19 @@ let bestellijnCheckboxen = document.querySelectorAll('input[type="checkbox"]');
 
 
 //Eventlistener voor order voltooid button.
-//Button wordt geactiveerd wanneer alle checkbox gechecked zijn.
 document.addEventListener("change", () => {
+
+        //bestellijn doorstrepen wanneer ze aangevinkt is
+        bestellijnCheckboxen.forEach(checkbox => {
+            if (checkbox.checked) {
+                checkbox.nextElementSibling.classList.add('checked');
+            } else {
+
+                checkbox.nextElementSibling.classList.remove('checked');
+            }
+        });
+
+        //order button in- of uitschakelen wanneer alle checkboxen aangevinkt staan
         for (let i = 0; i < bestellijnCheckboxen.length; i++) {
             if (!bestellijnCheckboxen[i].checked) {
                 document.getElementById("orderVoltooidBtn").disabled = true;

@@ -12,6 +12,7 @@ body {
     padding-right: 0.5em;
     font-size: 2em;
 }
+
 #geenBestellingen{
     font-weight: bold;
     padding-left: 0.5em;
@@ -21,7 +22,6 @@ body {
     margin: 3em;
 
 }
-
 
 header {
     background-color: #ABD7A8;
@@ -82,7 +82,12 @@ button{
 }
 
 .checked {
+
     text-decoration: line-through;
+}
+
+main div{
+    display:inline;
 }
 
 
