@@ -15,10 +15,10 @@ public class BestellijnRepository {
 
     public List<BestellijnDTO> findByBestelId(long bestelId) {
         var sql = """
-                  select bestellijnId, bestelId, bestellijnen.artikelId, naam, aantalBesteld - aantalGeannuleerd as aantal
+                  select bestellijnen.artikelId, naam, beschrijving, aantalBesteld - aantalGeannuleerd as aantal
                   from bestellijnen
                   inner join artikelen on artikelen.artikelId = bestellijnen.artikelId
-                  where bestelId = ?
+                  where bestelId = ? and aantalBesteld > aantalGeannuleerd
                   """;
         return jdbcClient.sql(sql).param(bestelId).query(BestellijnDTO.class).list();
     }
