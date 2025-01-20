@@ -81,4 +81,8 @@ button{
 
 }
 
+.checked {
+    text-decoration: line-through;
+}
+
 
