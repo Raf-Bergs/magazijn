@@ -1,13 +1,84 @@
 body {
-    background-color: #fff;
     font-family: sans-serif;
     margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
 }
-header{
+.fout {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-size: 2em;
+}
+#geenBestellingen{
+    font-weight: bold;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-size: 2em;
     text-align: center;
-    margin-bottom: 1em;
+    margin: 3em;
+
 }
 
-.logo{
-    width:100%;
+
+header {
+    background-color: #ABD7A8;
+    color: #fff;
+    text-align: center;
+    padding: 1em 0;
 }
+
+
+.logo {
+    max-width: 300px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+
+main {
+    padding: 20px;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+th {
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    padding: 10px;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 2em;
+}
+
+
+tr:nth-child(odd) {
+    background-color: #ABD7A8;
+}
+main a{
+    text-align: center;
+}
+
+
+button{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.8em;
+
+}
+
+

@@ -9,22 +9,40 @@
     <title>Bestelling</title>
 </head>
 <body>
+
+<!--banner image en bestel nummer indicator -->
 <header>
     <img class="logo" src="images/logo_prularia_zwart.jpg" alt="logo_prularia">
     <h1>Bestelling nummer: <span id="bestelId"></span></h1>
 </header>
 
-<main>
+<!-- dit tonen bij problemen -->
+<div id="storing" class="fout" hidden>Storing, contacteer helpdesk.</div>
+
+<!-- dit tonen bij geen bestellingen -->
+<div id="geenBestellingen" hidden> Er zijn geen bestellingen. :)</div>
+
+<main id="main">
     <table>
         <tbody id="bestellingBody">
-
+        <!-- voorbeeld bestellinglijn -->
+        <tr>
+            <td>
+                <input type="checkbox"> A1 STOEL x 3
+            </td>
+        </tr>
+        <tr>
+            <td><input type="checkbox"> B2 FLES x 27</td>
+        </tr>
+        <tr>
+            <td><input type="checkbox"> C3 TAFEL x 1</td>
+        </tr>
         </tbody>
     </table>
-
 </main>
-<footer>
 
-</footer>
+<!-- order voltooid button -->
+<button id="orderVoltooidBtn" type="button" disabled>Order voltooid</button>
 
 </body>
 </html>
