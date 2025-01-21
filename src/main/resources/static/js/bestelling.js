@@ -50,21 +50,27 @@ const bestellijnen = [
 ]
 
 
-const tbody = byId("bestellingBody")
 
 if (bestelling) {
+    verberg("geenBestellingen")
     byId("bestelId").textContent = bestelling.bestelId;
-    const tbody = byId("bestellingBody")
     verwerkBestellijnen(bestellijnen)
+} else{
+    toon("geenBestellingen")
 }
 
 function verwerkBestellijnen(bestellijnen) {
+    const tbody = byId("bestellingBody")
     for (const bestellijn of bestellijnen) {
         const tr = tbody.insertRow()
         const td = tr.insertCell()
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         const div = document.createElement("div");
+        div.addEventListener('click', () => {
+            sessionStorage.setItem("artikelId", bestellijn.artikelId)
+            //window.location = "artikelinfo.html"
+        })
         td.appendChild(checkbox);
         td.appendChild(div);
         const locatie = document.createElement("span");

@@ -68,16 +68,15 @@ td {
 tr:nth-child(odd) {
     background-color: #ABD7A8;
 }
+
+
 main a{
     text-align: center;
 }
 
 
 button{
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2.8em;
+
 
 }
 
@@ -88,6 +87,40 @@ button{
 
 main div{
     display:inline;
+    cursor: pointer;
+}
+main td:hover{
+    background-color: #54d0ad;
+}
+
+button:disabled{
+    background-color: #bab8b8;
+}
+
+button {
+    background-color: #4CAF50;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    outline: 0;
+    padding: 8px 16px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.8em;
+    border-radius: 15px;
+}
+
+input[type='checkbox'] {
+    -webkit-appearance:none;
+    width:30px;
+    height:30px;
+    background:white;
+    border-radius:5px;
+    border:2px solid #555;
+}
+input[type='checkbox']:checked {
+    background: #3b3d46;
 }
 
 
