@@ -12,6 +12,7 @@ public class BestellingRepository {
     public BestellingRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
+
     public Optional<Bestelling> findBestellingById(long bestelId) {
         var sql = """
                     SELECT bestelId, bestelDatum, klantId, betaald, betalingscode, betaalwijzeId, annulatie, annulatiedatum,
@@ -24,5 +25,30 @@ public class BestellingRepository {
                 .param(bestelId)
                 .query(Bestelling.class)
                 .optional();
+    }
+
+    public Optional<Bestelling> findNextBestelling() {
+        var sql = """
+            SELECT bestelId, bestelDatum, klantId, betaald, betalingscode, terugbetalingscode,
+                   bestellingsStatusId, actiecodeGebruikt, bedrijfsnaam, btwNummer, voornaam, familienaam,
+                   facturatieAdresId, leveringsAdresId
+            FROM bestellingen
+            WHERE bestellingsStatusId = 4 -- Alleen bestellingen met status 'Klaarmaken'
+            ORDER BY bestelDatum ASC
+            LIMIT 1
+            """;
+        return jdbcClient.sql(sql).query(Bestelling.class).optional();
+    }
+
+    public void updateStatus(long bestelId, int statusId) {
+        var sql = """
+                UPDATE bestellingen
+                SET bestellingsStatusId = ?
+                WHERE bestelId = ?
+                """;
+        jdbcClient.sql(sql)
+                .param(statusId)
+                .param(bestelId)
+                .update();
     }
 }
