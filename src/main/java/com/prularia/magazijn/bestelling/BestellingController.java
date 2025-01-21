@@ -14,7 +14,7 @@ public class BestellingController {
     }
 
     @PostMapping("{id}")
-    public void rondBestellingAf(@PathVariable long id, @RequestBody List<AfgerondeBestellijnenDTO> bestellijnen) {
+    public void rondBestellingAf(@PathVariable long id, @RequestBody List<AfgerondeBestellijnDTO> bestellijnen) {
         bestellingService.rondBestellingAf(new AfgerondeBestellingDTO(id, bestellijnen));
     }
 }

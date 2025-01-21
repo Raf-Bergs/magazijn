@@ -17,15 +17,15 @@ public class MagazijnplaatsRepository {
         var sql = """
                   update magazijnplaatsen
                   set aantal = aantal - ?
-                  where artikelId = ? and aantal >= ?
+                  where magazijnPlaatsId = ? and aantal >= ?
                   """;
         if (jdbcClient.sql(sql).params(aantal, magazijnplaatsId, aantal).update() == 0) {
-            var sqlArtikelId = """
+            var sqlMagazijnplaatsId = """
                                select aantal
                                from magazijnplaatsen
-                               where artikelId = ?
+                               where magazijnPlaatsId = ?
                                """;
-            var result = jdbcClient.sql(sqlArtikelId).param(magazijnplaatsId).query(Long.class).optional();
+            var result = jdbcClient.sql(sqlMagazijnplaatsId).param(magazijnplaatsId).query(Long.class).optional();
             var magazijnplaatsAantal = result.orElseThrow(() -> new MagazijnplaatsNietGevondenException(magazijnplaatsId));
             if (magazijnplaatsAantal < aantal) {
                 throw new OnvoldoendeVoorraadException(magazijnplaatsId, aantal);
