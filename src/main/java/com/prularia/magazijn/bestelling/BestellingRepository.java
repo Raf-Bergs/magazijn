@@ -14,12 +14,12 @@ public class BestellingRepository {
     void rondBestellingAf(long bestelId) {
         var sql = """
                   update bestellingen
-                  set bestellingsStatusId = 
+                  set bestellingsStatusId =
                       (select bestellingsStatusId from bestellingsstatussen where naam = 'Onderweg')
                   where bestelId = ?
                   """;
         if (jdbcClient.sql(sql).param(bestelId).update() == 0) {
             throw new BestellingNietGevondenException(bestelId);
-        };
+        }
     }
 }

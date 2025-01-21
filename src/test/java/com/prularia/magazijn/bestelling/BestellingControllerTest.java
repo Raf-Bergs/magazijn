@@ -20,9 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql("/testBestelling.sql")
 @AutoConfigureMockMvc
 class BestellingControllerTest {
-    private final static String BESTELLINGEN_TABLE = "bestellingen";
-    private final static String MAGAZIJNPLAATSEN_TABLE = "magazijnplaatsen";
-    private final static String ARTIKELEN_TABLE = "artikelen";
     private final MockMvc mockMvc;
     private final JdbcClient jdbcClient;
     private final Path testResources = Path.of("src/test/resources");
