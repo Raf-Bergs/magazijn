@@ -49,7 +49,7 @@ public class MagazijnPlaatsRepository {
         var sql = """
         SELECT
             mp.artikelId, a.naam as artikelNaam, mp.magazijnPlaatsId, mp.rij, mp.rek, mp.aantal AS voorraadInPlaats,
-            bl.aantalBesteld
+            bl.aantalBesteld, a.beschrijving
         FROM magazijnplaatsen mp
         JOIN artikelen a ON mp.artikelId = a.artikelId
         JOIN bestellijnen bl ON bl.artikelId = mp.artikelId

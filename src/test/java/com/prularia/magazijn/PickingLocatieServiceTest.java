@@ -42,10 +42,10 @@ class PickingLocatieServiceTest {
         long bestelId = 1L;
         Map<String, List<PickingLocatie>> groupedByCell = Map.of(
                 "A-1", List.of(
-                        new PickingLocatie(1L, "Artikel A", 101L, 'A', 1, 10, 5)
+                        new PickingLocatie(1L, "Artikel A", 101L, 'A', 1, 10, 5, "")
                 ),
                 "A-2", List.of(
-                        new PickingLocatie(2L, "Artikel B", 102L, 'A', 2, 15, 10)
+                        new PickingLocatie(2L, "Artikel B", 102L, 'A', 2, 15, 10, "")
                 )
         );
 
@@ -79,16 +79,16 @@ class PickingLocatieServiceTest {
         long bestelId = 1L;
         Map<String, List<PickingLocatie>> groupedByCell = Map.of(
                 "A-5", List.of(
-                        new PickingLocatie(1L, "Artikel1", 5L, 'A', 5, 20, 5)
+                        new PickingLocatie(1L, "Artikel1", 5L, 'A', 5, 20, 5, "")
                 ),
                 "A-10", List.of(
-                        new PickingLocatie(2L, "Artikel2", 10L, 'A', 10, 50, 10)
+                        new PickingLocatie(2L, "Artikel2", 10L, 'A', 10, 50, 10, "")
                 ),
                 "A-40", List.of(
-                        new PickingLocatie(3L, "Artikel3", 40L, 'A', 40, 30, 5)
+                        new PickingLocatie(3L, "Artikel3", 40L, 'A', 40, 30, 5, "")
                 ),
                 "B-1", List.of(
-                        new PickingLocatie(4L, "Artikel1", 1L, 'B', 1, 20, 5)//same item(A-5)
+                        new PickingLocatie(4L, "Artikel1", 1L, 'B', 1, 20, 5, "")//same item(A-5)
                 )
         );
 
@@ -120,8 +120,8 @@ class PickingLocatieServiceTest {
         long bestelId = 1L;
         Map<String, List<PickingLocatie>> groupedByCell = Map.of(
                 "A-10", List.of(
-                        new PickingLocatie(1L, "Artikel1", 10L, 'A', 10, 10, 3), // 3 items
-                        new PickingLocatie(1L, "Artikel1", 11L, 'A', 10, 10, 2)  // 2 items
+                        new PickingLocatie(1L, "Artikel1", 10L, 'A', 10, 10, 3, ""), // 3 items
+                        new PickingLocatie(1L, "Artikel1", 11L, 'A', 10, 10, 2, "")  // 2 items
                 )
         );
 

@@ -1,7 +1,6 @@
 package com.prularia.magazijn.pickingLocatie;
 
 import com.prularia.magazijn.magazijnplaats.MagazijnPlaatsRepository;
-import com.prularia.magazijn.pickingLocatie.PickingLocatie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,7 +62,8 @@ public class PickingLocatieService {
                 locatie.getRij(),
                 locatie.getRek(),
                 locatie.getVoorraadInPlaats(),
-                pickable
+                pickable,
+                locatie.getBeschrijving()
         );
     }
 
