@@ -47,7 +47,7 @@ public class BestellingRepository {
                 bestellingsstatussen where naam =
                 'Onderweg')
                   where bestelId = ?
-                  """;
+                """;
         if (jdbcClient.sql(sql).param(bestelId).update() == 0) {
             throw new BestellingNietGevondenException(bestelId);
         }
