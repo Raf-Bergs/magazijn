@@ -12,7 +12,7 @@ public class Bestelling {
 //    private final boolean annulatie;
 //    private final String annulatiedatum;
     private final String terugbetalingscode;
-    private final BestellingsStatus bestellingsStatus;
+    private final long bestellingsStatusId;
     private final boolean actiecodeGebruikt;
     private final String bedrijfsnaam;
     private final String btwNummer;
@@ -21,15 +21,14 @@ public class Bestelling {
     private final long facturatieAdresId;
     private final long leveringsAdresId;
 
-    public Bestelling(long bestelId, LocalDateTime bestelDatum,
-                      long klantId, boolean betaald, String betalingscode, String terugbetalingscode, BestellingsStatus bestellingsStatus, boolean actiecodeGebruikt, String bedrijfsnaam, String btwNummer, String voornaam, String familienaam, long facturatieAdresId, long leveringsAdresId) {
+    public Bestelling(long bestelId, LocalDateTime bestelDatum, long klantId, boolean betaald, String betalingscode, String terugbetalingscode, long bestellingsStatusId, boolean actiecodeGebruikt, String bedrijfsnaam, String btwNummer, String voornaam, String familienaam, long facturatieAdresId, long leveringsAdresId) {
         this.bestelId = bestelId;
         this.bestelDatum = bestelDatum;
         this.klantId = klantId;
         this.betaald = betaald;
         this.betalingscode = betalingscode;
         this.terugbetalingscode = terugbetalingscode;
-        this.bestellingsStatus = bestellingsStatus;
+        this.bestellingsStatusId = bestellingsStatusId;
         this.actiecodeGebruikt = actiecodeGebruikt;
         this.bedrijfsnaam = bedrijfsnaam;
         this.btwNummer = btwNummer;
@@ -63,8 +62,8 @@ public class Bestelling {
         return terugbetalingscode;
     }
 
-    public BestellingsStatus getBestellingsStatus() {
-        return bestellingsStatus;
+    public long getBestellingsStatusId() {
+        return bestellingsStatusId;
     }
 
     public boolean isActiecodeGebruikt() {

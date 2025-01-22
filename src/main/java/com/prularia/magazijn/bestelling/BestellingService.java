@@ -21,7 +21,9 @@ public class BestellingService {
     }
 
     @Transactional
-    public void updateStatus(long bestelId) {
-        bestellingRepository.updateStatus(bestelId);
+    public void updateStatusToKlaarmaken(long bestelId) {
+        bestellingRepository.updateStatusToKlaarmaken(bestelId);
     }
+
+
 }

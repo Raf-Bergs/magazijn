@@ -19,22 +19,23 @@ public class BestellingRepository {
         var sql = """
             SELECT bestelId
             FROM bestellingen
-            WHERE bestellingsStatusId = 4 -- Alleen bestellingen met status 'Klaarmaken'
+            WHERE bestellingsStatusId = 2 -- Alleen bestellingen met status 'Betaald'
             ORDER BY bestelDatum ASC
             LIMIT 1
             """;
         return jdbcClient.sql(sql).query(Long.class).optional();
     }
 
-    //wanneer magazijnier op voltooid klikt
-    public void updateStatus(long bestelId) {
-        var sql = """
+    public void updateStatusToKlaarmaken(long bestelId) {
+        var sql= """
                 UPDATE bestellingen
-                SET bestellingsStatusId = 5 --status verandert naar onderweg(5)
+                SET bestellingsStatusId = 4 --status verandert naar 'klaarmaken(4)'
                 WHERE bestelId = ?
                 """;
         jdbcClient.sql(sql)
-                .param(bestelId)
+                .params(bestelId)
                 .update();
     }
+
+
 }

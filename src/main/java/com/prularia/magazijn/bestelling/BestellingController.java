@@ -15,11 +15,11 @@ public class BestellingController {
 
     @GetMapping("/findBestelling")
     public long findNextBestelling() {
-        return bestellingService.findBestelling().orElseThrow(BestellingNietGevondenException::new);
+        long bestelId = bestellingService.findBestelling()
+                .orElseThrow(BestellingNietGevondenException::new);
+        bestellingService.updateStatusToKlaarmaken(bestelId); // Zet op 'Klaarmaken'
+        return bestelId;
     }
 
-    @PostMapping("/{bestelId}/voltooi")
-    public void updateStatus(@PathVariable long bestelId) {
-        bestellingService.updateStatus(bestelId); // Update status naar 'Onderweg'
-    }
+
 }
