@@ -75,7 +75,7 @@ class PickingLocatieServiceTest {
 
     @Test
     void Get_Optimized_PickingPath_Prioritize_Cell_For_Multiple_Articles() {
-        // Arrange
+
         long bestelId = 1L;
         Map<String, List<PickingLocatie>> groupedByCell = Map.of(
                 "A-5", List.of(
