@@ -64,7 +64,8 @@ public class PickingLocatieService {
                 locatie.getRij(),
                 locatie.getRek(),
                 locatie.getVoorraadInPlaats(),
-                pickable
+                pickable,
+                locatie.getBeschrijving()
         );
     }
 

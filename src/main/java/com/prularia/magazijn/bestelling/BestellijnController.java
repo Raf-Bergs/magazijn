@@ -13,11 +13,9 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("bestelling")
 public class BestellijnController {
-    private final BestellijnService bestellijnService;
     private final PickingLocatieService pickingLocatieService;
 
-    public BestellijnController(BestellijnService bestellijnService, PickingLocatieService pickingLocatieService) {
-        this.bestellijnService = bestellijnService;
+    public BestellijnController(PickingLocatieService pickingLocatieService) {
         this.pickingLocatieService = pickingLocatieService;
     }
 
@@ -28,7 +26,7 @@ public class BestellijnController {
     }
 
     private BestellijnDTO bestellijnDTOVanPickingLocatie(PickingLocatie locatie) {
-        return new BestellijnDTO(locatie.getArtikelId(), locatie.getArtikelNaam(), "",
+        return new BestellijnDTO(locatie.getArtikelId(), locatie.getArtikelNaam(), locatie.getBeschrijving(),
                 locatie.getAantalBesteld(), "" + locatie.getRij() + locatie.getRek());
     }
 
