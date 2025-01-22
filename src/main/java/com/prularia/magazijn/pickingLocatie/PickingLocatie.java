@@ -8,8 +8,9 @@ public class PickingLocatie {
     private final int rek;
     private long voorraadInPlaats;
     private long aantalBesteld;
+    private final String beschrijving;
 
-    public PickingLocatie(long artikelId, String artikelNaam, long magazijnPlaatsId, char rij, int rek, long voorraadInPlaats, long aantalBesteld) {
+    public PickingLocatie(long artikelId, String artikelNaam, long magazijnPlaatsId, char rij, int rek, long voorraadInPlaats, long aantalBesteld, String beschrijving) {
         this.artikelId = artikelId;
         this.artikelNaam = artikelNaam;
         this.magazijnPlaatsId = magazijnPlaatsId;
@@ -17,7 +18,7 @@ public class PickingLocatie {
         this.rek = rek;
         this.voorraadInPlaats = voorraadInPlaats;
         this.aantalBesteld = aantalBesteld;
-
+        this.beschrijving = beschrijving;
     }
 
 
@@ -49,7 +50,7 @@ public class PickingLocatie {
         return aantalBesteld;
     }
 
-
-
-
+    public String getBeschrijving() {
+        return beschrijving;
+    }
 }
