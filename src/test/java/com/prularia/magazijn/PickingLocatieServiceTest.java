@@ -112,6 +112,7 @@ class PickingLocatieServiceTest {
         assertThat(result.get(2).getRek()).isEqualTo(40);//idem
         assertThat(result.get(3).getRij()).isEqualTo('B');//ArtiKel1(4th)
         assertThat(result.get(3).getRek()).isEqualTo(1);//idem
+        //
     }
 
     @Test
