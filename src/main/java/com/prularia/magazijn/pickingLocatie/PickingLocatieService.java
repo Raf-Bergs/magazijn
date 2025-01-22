@@ -7,39 +7,41 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 public class PickingLocatieService {
 
-    private final MagazijnPlaatsRepository magazijnPlaatsenRepository;
+    private final MagazijnPlaatsRepository magazijnPlaatsRepository;
 
-    public PickingLocatieService(MagazijnPlaatsRepository magazijnPlaatsenRepository) {
-        this.magazijnPlaatsenRepository = magazijnPlaatsenRepository;
+    public PickingLocatieService(MagazijnPlaatsRepository magazijnPlaatsRepository) {
+        this.magazijnPlaatsRepository = magazijnPlaatsRepository;
     }
 
 
     public List<PickingLocatie> getOptimizedPickingPath(long bestelId) {
-        // Fetch locaties from repository
-        List<PickingLocatie> locaties = magazijnPlaatsenRepository.findLocatiesVoorBestelling(bestelId);
+        List<PickingLocatie> locaties = magazijnPlaatsRepository.findLocatiesVoorBestelling(bestelId);
         System.out.println("Fetched locaties for bestelId " + bestelId + ": " + locaties);
 
-        if (locaties.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        // Group locaties by Artikel ID
         List<PickingLocatie> optimizedPath = new ArrayList<>();
         PickingLocatie currentLocation = null;
+        long currentArtikelId = 0;
+        List<PickingLocatie> artikelLocaties = new ArrayList<>();
 
-        var groupedLocaties = locaties.stream()
-                .collect(Collectors.groupingBy(PickingLocatie::getArtikelId));
+        for (PickingLocatie locatie : locaties) {
+            if (locatie.getArtikelId() != currentArtikelId) {
+                if (!artikelLocaties.isEmpty()) {
+                    optimizedPath.addAll(calculateBestPath(artikelLocaties, currentLocation));
+                    currentLocation = optimizedPath.isEmpty() ? null : optimizedPath.get(optimizedPath.size() - 1);
+                }
+                currentArtikelId = locatie.getArtikelId();
+                artikelLocaties.clear();
+            }
+            artikelLocaties.add(locatie);
+        }
 
-        for (var entry : groupedLocaties.entrySet()) {
-            List<PickingLocatie> artikelLocaties = entry.getValue();
+        if (!artikelLocaties.isEmpty()) {
             optimizedPath.addAll(calculateBestPath(artikelLocaties, currentLocation));
-            currentLocation = optimizedPath.isEmpty() ? null : optimizedPath.get(optimizedPath.size() - 1);
         }
 
         return optimizedPath;
@@ -71,6 +73,7 @@ public class PickingLocatieService {
     }
 
     private PickingLocatie createUpdatedPickingLocatie(PickingLocatie locatie, long pickable) {
+
         return new PickingLocatie(
                 locatie.getArtikelId(),
                 locatie.getArtikelNaam(),
@@ -86,6 +89,7 @@ public class PickingLocatieService {
         if (current == null) {
             return getRijAsInt(next.getRij()) + next.getRek();
         }
+
         int rijDistance = Math.abs(getRijAsInt(current.getRij()) - getRijAsInt(next.getRij()));
         int rekDistance = Math.abs(current.getRek() - next.getRek());
         return rijDistance + rekDistance;
