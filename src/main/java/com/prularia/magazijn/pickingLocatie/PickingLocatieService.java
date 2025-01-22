@@ -7,7 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 @Service
 @Transactional(readOnly = true)
 public class PickingLocatieService {
@@ -19,10 +22,20 @@ public class PickingLocatieService {
     }
 
     public List<PickingLocatie> getOptimizedPickingPath(long bestelId) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
         Map<String, List<PickingLocatie>> groupedByCell = magazijnPlaatsRepository.findGroupedByCellAndOrdered(bestelId);
 
+        if (locaties.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Group locaties by Artikel ID
         List<PickingLocatie> optimizedPath = new ArrayList<>();
         PickingLocatie currentLocation = null;
+
         List<Map.Entry<String, List<PickingLocatie>>> sortedGroups = new ArrayList<>(groupedByCell.entrySet());
 
         // Sort groups by proximity to the current location
