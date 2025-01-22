@@ -1,10 +1,12 @@
 package com.prularia.magazijn.pickingLocatie;
 
 import com.prularia.magazijn.magazijnplaats.MagazijnPlaatsRepository;
+import com.prularia.magazijn.pickingLocatie.PickingLocatie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -12,17 +14,14 @@ public class PickingLocatieService {
 
     private final MagazijnPlaatsRepository magazijnPlaatsRepository;
 
-    public PickingLocatieService(MagazijnPlaatsRepository magazijnPlaatsenRepository) {
-        this.magazijnPlaatsRepository = magazijnPlaatsenRepository;
+    public PickingLocatieService(MagazijnPlaatsRepository magazijnPlaatsRepository) {
+        this.magazijnPlaatsRepository = magazijnPlaatsRepository;
     }
 
     public List<PickingLocatie> getOptimizedPickingPath(long bestelId) {
 
         Map<String, List<PickingLocatie>> groupedByCell = magazijnPlaatsRepository.findGroupedByCellAndOrdered(bestelId);
 
-        if (groupedByCell.isEmpty()) {
-            return new ArrayList<>();
-        }
 
         // Group locaties by Artikel ID
         List<PickingLocatie> optimizedPath = new ArrayList<>();
@@ -64,8 +63,7 @@ public class PickingLocatieService {
                 locatie.getRij(),
                 locatie.getRek(),
                 locatie.getVoorraadInPlaats(),
-                pickable,
-                locatie.getBeschrijving()
+                pickable
         );
     }
 
