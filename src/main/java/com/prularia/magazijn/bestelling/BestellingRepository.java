@@ -13,41 +13,27 @@ public class BestellingRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public Optional<Bestelling> findBestellingById(long bestelId) {
-        var sql = """
-                    SELECT bestelId, bestelDatum, klantId, betaald, betalingscode, betaalwijzeId, annulatie, annulatiedatum,
-                           terugbetalingscode, bestellingsStatusId, actiecodeGebruikt, bedrijfsnaam, btwNummer, voornaam,
-                           familienaam, facturatieAdresId, leveringsAdresId
-                    FROM bestellingen
-                    WHERE bestelId = ?
-                """;
-        return jdbcClient.sql(sql)
-                .param(bestelId)
-                .query(Bestelling.class)
-                .optional();
-    }
 
-    public Optional<Bestelling> findNextBestelling() {
+    //eerste volgende bestelling zoeken
+    public Optional<Long> findBestelling() {
         var sql = """
-            SELECT bestelId, bestelDatum, klantId, betaald, betalingscode, terugbetalingscode,
-                   bestellingsStatusId, actiecodeGebruikt, bedrijfsnaam, btwNummer, voornaam, familienaam,
-                   facturatieAdresId, leveringsAdresId
+            SELECT bestelId
             FROM bestellingen
             WHERE bestellingsStatusId = 4 -- Alleen bestellingen met status 'Klaarmaken'
             ORDER BY bestelDatum ASC
             LIMIT 1
             """;
-        return jdbcClient.sql(sql).query(Bestelling.class).optional();
+        return jdbcClient.sql(sql).query(Long.class).optional();
     }
 
-    public void updateStatus(long bestelId, int statusId) {
+    //wanneer magazijnier op voltooid klikt
+    public void updateStatus(long bestelId) {
         var sql = """
                 UPDATE bestellingen
-                SET bestellingsStatusId = ?
+                SET bestellingsStatusId = 5 --status verandert naar onderweg(5)
                 WHERE bestelId = ?
                 """;
         jdbcClient.sql(sql)
-                .param(statusId)
                 .param(bestelId)
                 .update();
     }

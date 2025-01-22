@@ -16,17 +16,12 @@ public class BestellingService {
     }
 
 
-    public Bestelling findBestellingById(long bestelId) {
-        return bestellingRepository.findBestellingById(bestelId)
-                .orElseThrow(() -> new BestellingNietGevondenException(bestelId));
-    }
-
-    public Optional<Bestelling> findNextBestelling() {
-        return bestellingRepository.findNextBestelling();
+    public Optional<Long> findBestelling() {
+        return bestellingRepository.findBestelling();
     }
 
     @Transactional
-    public void markAsCompleted(long bestelId) {
-        bestellingRepository.updateStatus(bestelId, BestellingsStatus.ONDERWEG.getStatusId());
+    public void updateStatus(long bestelId) {
+        bestellingRepository.updateStatus(bestelId);
     }
 }
