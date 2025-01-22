@@ -3,7 +3,7 @@ package com.prularia.magazijn;
 
 
 
-import com.prularia.magazijn.magazijnplaats.MagazijnPlaatsRepository;
+import com.prularia.magazijn.magazijnplaats.MagazijnplaatsRepository;
 import com.prularia.magazijn.pickingLocatie.PickingLocatie;
 import com.prularia.magazijn.pickingLocatie.PickingLocatieService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +21,9 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 class PickingLocatieServiceTest {
     private PickingLocatieService pickingLocatieService;
-    private MagazijnPlaatsRepository magazijnPlaatsRepository;
+    private MagazijnplaatsRepository magazijnPlaatsRepository;
 
-    PickingLocatieServiceTest(PickingLocatieService pickingLocatieService, MagazijnPlaatsRepository magazijnPlaatsRepository) {
+    PickingLocatieServiceTest(PickingLocatieService pickingLocatieService, MagazijnplaatsRepository magazijnPlaatsRepository) {
         this.pickingLocatieService = pickingLocatieService;
         this.magazijnPlaatsRepository = magazijnPlaatsRepository;
     }
@@ -31,7 +31,7 @@ class PickingLocatieServiceTest {
 
     @BeforeEach
     void setUp() {
-        magazijnPlaatsRepository = mock(MagazijnPlaatsRepository.class);
+        magazijnPlaatsRepository = mock(MagazijnplaatsRepository.class);
         pickingLocatieService = new PickingLocatieService(magazijnPlaatsRepository);
     }
 

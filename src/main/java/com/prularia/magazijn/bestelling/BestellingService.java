@@ -39,7 +39,6 @@ public class BestellingService {
             // Magazijn plaatsen aanpassen
             var rij = bestellijn.magazijnPlaats().substring(0, 1);
             var rek = Integer.parseInt(bestellijn.magazijnPlaats().substring(1));
-            System.out.println(magazijnplaatsRepository.findIdByPlaats(rij, rek));
             var magazijnPlaatsId = magazijnplaatsRepository.findIdByPlaats(rij, rek).orElseThrow(() -> new MagazijnplaatsNietGevondenException(rij, rek));
             magazijnplaatsRepository.pasMagazijnplaatsAan(magazijnPlaatsId, bestellijn.aantal());
             // Stock aanpassen

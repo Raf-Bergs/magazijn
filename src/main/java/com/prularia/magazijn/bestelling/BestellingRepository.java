@@ -17,7 +17,8 @@ public class BestellingRepository {
     //eerste volgende bestelling zoeken
     public Optional<Long> findBestelling() {
         var sql = """
-            SELECT bestelId
+            
+                SELECT bestelId
             FROM bestellingen
             WHERE bestellingsStatusId = 2 -- Alleen bestellingen met status 'Betaald'
             ORDER BY bestelDatum ASC
@@ -38,10 +39,14 @@ public class BestellingRepository {
     }
 
     void rondBestellingAf(long bestelId) {
-        var sql = """
-                  update bestellingen
-                  set bestellingsStatusId =
-                      (select bestellingsStatusId from bestellingsstatussen where naam = 'Onderweg')
+        var sql =
+                """
+                  update
+                bestell
+                     set bestellingsStatusId =
+                      (select bestellingsStatusId from
+                bestellingsstatussen where naam =
+                'Onderweg')
                   where bestelId = ?
                   """;
         if (jdbcClient.sql(sql).param(bestelId).update() == 0) {

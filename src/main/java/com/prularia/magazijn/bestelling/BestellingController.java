@@ -2,6 +2,8 @@ package com.prularia.magazijn.bestelling;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/bestellingen")
 public class BestellingController {
