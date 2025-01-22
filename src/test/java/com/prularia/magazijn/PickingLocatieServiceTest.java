@@ -1,43 +1,37 @@
 package com.prularia.magazijn;
 
 
-
-
 import com.prularia.magazijn.magazijnplaats.MagazijnPlaatsRepository;
 import com.prularia.magazijn.pickingLocatie.PickingLocatie;
 import com.prularia.magazijn.pickingLocatie.PickingLocatieService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
-@SpringBootTest
 class PickingLocatieServiceTest {
-    private PickingLocatieService pickingLocatieService;
+
+    @Mock
     private MagazijnPlaatsRepository magazijnPlaatsRepository;
 
-    PickingLocatieServiceTest(PickingLocatieService pickingLocatieService, MagazijnPlaatsRepository magazijnPlaatsRepository) {
-        this.pickingLocatieService = pickingLocatieService;
-        this.magazijnPlaatsRepository = magazijnPlaatsRepository;
-    }
-
+    @InjectMocks
+    private PickingLocatieService pickingLocatieService;
 
     @BeforeEach
     void setUp() {
-        magazijnPlaatsRepository = mock(MagazijnPlaatsRepository.class);
-        pickingLocatieService = new PickingLocatieService(magazijnPlaatsRepository);
+        MockitoAnnotations.openMocks(this);
     }
 
-
     @Test
-    void  Get_Optimized_Picking_Path_Returns_Correct_Order_And_Items() {
+    void testGetOptimizedPickingPath() {
 
         long bestelId = 1L;
         Map<String, List<PickingLocatie>> groupedByCell = Map.of(
@@ -61,7 +55,7 @@ class PickingLocatieServiceTest {
     }
 
     @Test
-    void Get_Optimized_Picking_Path_WithEmpty_Result() {
+    void testGetOptimizedPickingPathWithEmptyResult() {
 
         long bestelId = 2L;
         when(magazijnPlaatsRepository.findGroupedByCellAndOrdered(bestelId)).thenReturn(Map.of());
@@ -74,8 +68,8 @@ class PickingLocatieServiceTest {
     }
 
     @Test
-    void Get_Optimized_PickingPath_Prioritize_Cell_For_Multiple_Articles() {
-        // Arrange
+    void testGetOptimizedPickingPath_PrioritizeCellForMultipleArticles() {
+
         long bestelId = 1L;
         Map<String, List<PickingLocatie>> groupedByCell = Map.of(
                 "A-5", List.of(
@@ -115,7 +109,7 @@ class PickingLocatieServiceTest {
     }
 
     @Test
-    void Get_OptimizedPickingPath_WithIncompleteItems() {// Only one location should be picked
+    void testGetOptimizedPickingPath_WithPartialFulfillmentFromMultipleLocations() {
 
         long bestelId = 1L;
         Map<String, List<PickingLocatie>> groupedByCell = Map.of(
@@ -129,6 +123,7 @@ class PickingLocatieServiceTest {
 
 
         List<PickingLocatie> result = pickingLocatieService.getOptimizedPickingPath(bestelId);
+
 
         assertThat(result)
                 .isNotNull()

@@ -1,12 +1,12 @@
 package com.prularia.magazijn.pickingLocatie;
 
 import com.prularia.magazijn.magazijnplaats.MagazijnPlaatsRepository;
+import com.prularia.magazijn.pickingLocatie.PickingLocatie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -18,62 +18,40 @@ public class PickingLocatieService {
         this.magazijnPlaatsRepository = magazijnPlaatsRepository;
     }
 
-
     public List<PickingLocatie> getOptimizedPickingPath(long bestelId) {
-        List<PickingLocatie> locaties = magazijnPlaatsRepository.findLocatiesVoorBestelling(bestelId);
-        System.out.println("Fetched locaties for bestelId " + bestelId + ": " + locaties);
+        Map<String, List<PickingLocatie>> groupedByCell = magazijnPlaatsRepository.findGroupedByCellAndOrdered(bestelId);
 
         List<PickingLocatie> optimizedPath = new ArrayList<>();
         PickingLocatie currentLocation = null;
-        long currentArtikelId = 0;
-        List<PickingLocatie> artikelLocaties = new ArrayList<>();
+        List<Map.Entry<String, List<PickingLocatie>>> sortedGroups = new ArrayList<>(groupedByCell.entrySet());
 
-        for (PickingLocatie locatie : locaties) {
-            if (locatie.getArtikelId() != currentArtikelId) {
-                if (!artikelLocaties.isEmpty()) {
-                    optimizedPath.addAll(calculateBestPath(artikelLocaties, currentLocation));
-                    currentLocation = optimizedPath.isEmpty() ? null : optimizedPath.get(optimizedPath.size() - 1);
+        // Sort groups by proximity to the current location
+        PickingLocatie finalCurrentLocation = currentLocation;
+        sortedGroups.sort(Comparator.comparing(entry -> calculateScore(finalCurrentLocation, entry.getValue().get(0))));
+
+        for (var entry : sortedGroups) {
+            List<PickingLocatie> cellLocaties = new ArrayList<>(entry.getValue());
+
+            for (PickingLocatie locatie : cellLocaties) {
+                long requiredQuantity = locatie.getAantalBesteld();
+                long pickedQuantity = optimizedPath.stream()
+                        .filter(p -> p.getArtikelId() == locatie.getArtikelId())
+                        .mapToLong(PickingLocatie::getAantalBesteld)
+                        .sum();
+
+                if (pickedQuantity < requiredQuantity) {
+                    long remainingQuantity = requiredQuantity - pickedQuantity;
+                    long pickable = Math.min(locatie.getVoorraadInPlaats(), remainingQuantity);
+                    optimizedPath.add(createUpdatedPickingLocatie(locatie, pickable));
                 }
-                currentArtikelId = locatie.getArtikelId();
-                artikelLocaties.clear();
             }
-            artikelLocaties.add(locatie);
-        }
 
-        if (!artikelLocaties.isEmpty()) {
-            optimizedPath.addAll(calculateBestPath(artikelLocaties, currentLocation));
+            currentLocation = cellLocaties.getLast();
         }
-
         return optimizedPath;
     }
 
-    private List<PickingLocatie> calculateBestPath(List<PickingLocatie> locaties, PickingLocatie start) {
-        List<PickingLocatie> bestPath = new ArrayList<>();
-
-        // Sort locations by proximity to the starting point
-        locaties.sort(Comparator.comparing(locatie -> calculateScore(start, locatie)));
-
-        // Determine the total required quantity to pick
-        long requiredQuantity = locaties.get(0).getAantalBesteld();
-
-        for (PickingLocatie locatie : locaties) {
-            if (requiredQuantity == 0) {
-                break;
-            }
-
-            long pickable = Math.min(locatie.getVoorraadInPlaats(), requiredQuantity);
-            requiredQuantity -= pickable;
-
-            if (pickable > 0) {
-                bestPath.add(createUpdatedPickingLocatie(locatie, pickable));
-            }
-        }
-
-        return bestPath;
-    }
-
     private PickingLocatie createUpdatedPickingLocatie(PickingLocatie locatie, long pickable) {
-
         return new PickingLocatie(
                 locatie.getArtikelId(),
                 locatie.getArtikelNaam(),
@@ -87,15 +65,16 @@ public class PickingLocatieService {
 
     private int calculateScore(PickingLocatie current, PickingLocatie next) {
         if (current == null) {
-            return getRijAsInt(next.getRij()) + next.getRek();
+            return getRijAsInt(next.getRij()) * 1000 + next.getRek();
         }
-
         int rijDistance = Math.abs(getRijAsInt(current.getRij()) - getRijAsInt(next.getRij()));
         int rekDistance = Math.abs(current.getRek() - next.getRek());
-        return rijDistance + rekDistance;
+        return rijDistance * 1000 + rekDistance;
     }
 
     private int getRijAsInt(char rij) {
         return rij - 'A' + 1;
     }
 }
+
+
