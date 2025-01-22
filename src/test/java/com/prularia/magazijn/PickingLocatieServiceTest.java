@@ -6,32 +6,21 @@ import com.prularia.magazijn.pickingLocatie.PickingLocatie;
 import com.prularia.magazijn.pickingLocatie.PickingLocatieService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 class PickingLocatieServiceTest {
-
-    @Mock
-    private MagazijnPlaatsRepository magazijnPlaatsRepository;
-
-    @InjectMocks
     private PickingLocatieService pickingLocatieService;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testGetOptimizedPickingPath() {
 
         long bestelId = 1L;
         Map<String, List<PickingLocatie>> groupedByCell = Map.of(
@@ -55,7 +44,6 @@ class PickingLocatieServiceTest {
     }
 
     @Test
-    void testGetOptimizedPickingPathWithEmptyResult() {
 
         long bestelId = 2L;
         when(magazijnPlaatsRepository.findGroupedByCellAndOrdered(bestelId)).thenReturn(Map.of());
@@ -68,7 +56,6 @@ class PickingLocatieServiceTest {
     }
 
     @Test
-    void testGetOptimizedPickingPath_PrioritizeCellForMultipleArticles() {
 
         long bestelId = 1L;
         Map<String, List<PickingLocatie>> groupedByCell = Map.of(
@@ -109,7 +96,6 @@ class PickingLocatieServiceTest {
     }
 
     @Test
-    void testGetOptimizedPickingPath_WithPartialFulfillmentFromMultipleLocations() {
 
         long bestelId = 1L;
         Map<String, List<PickingLocatie>> groupedByCell = Map.of(
@@ -123,7 +109,6 @@ class PickingLocatieServiceTest {
 
 
         List<PickingLocatie> result = pickingLocatieService.getOptimizedPickingPath(bestelId);
-
 
         assertThat(result)
                 .isNotNull()
