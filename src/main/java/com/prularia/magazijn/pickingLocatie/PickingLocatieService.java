@@ -10,17 +10,17 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class PickingLocatieService {
 
-    private final MagazijnPlaatsRepository magazijnPlaatsenRepository;
+    private final MagazijnPlaatsRepository magazijnPlaatsRepository;
 
     public PickingLocatieService(MagazijnPlaatsRepository magazijnPlaatsenRepository) {
-        this.magazijnPlaatsenRepository = magazijnPlaatsenRepository;
+        this.magazijnPlaatsRepository = magazijnPlaatsenRepository;
     }
 
     public List<PickingLocatie> getOptimizedPickingPath(long bestelId) {
 
         Map<String, List<PickingLocatie>> groupedByCell = magazijnPlaatsRepository.findGroupedByCellAndOrdered(bestelId);
 
-        if (locaties.isEmpty()) {
+        if (groupedByCell.isEmpty()) {
             return new ArrayList<>();
         }
 
