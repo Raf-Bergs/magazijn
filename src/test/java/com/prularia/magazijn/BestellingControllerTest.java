@@ -3,6 +3,7 @@ package com.prularia.magazijn;
 import com.prularia.magazijn.bestelling.Bestelling;
 import com.prularia.magazijn.bestelling.BestellingController;
 import com.prularia.magazijn.bestelling.BestellingService;
+import com.prularia.magazijn.bestelling.BestellingsStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,7 +28,7 @@ class BestellingControllerTest {
                 true,
                 "PAY123",
                 "REF456",
-                2L,
+                BestellingsStatus.BETAALD,
                 false,
                 "Bedrijf BV",
                 "NL123456789B01",
