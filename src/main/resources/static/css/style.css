@@ -19,7 +19,7 @@ body {
     padding-right: 0.5em;
     font-size: 2em;
     text-align: center;
-    margin: 3em;
+    margin: 5em;
 
 }
 
@@ -117,5 +117,9 @@ input[type='checkbox']:checked {
     background: #3b3d46;
 }
 
+#nieuweBestellingBtn{
+    font-size: 2em;
+    margin-top: 0.5em;
+}
 
 

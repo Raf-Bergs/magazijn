@@ -1,23 +1,7 @@
 "use strict"
-import {verberg, toon, byId, verwijderChildElementenVan, setText} from "./util.js";
+import {byId, toon, verberg} from "./util.js";
 
 
-const bestelling = {
-    "bestelId": 1,
-    "bestelDatum": "2025-01-06T10:00:00",
-    "klantId": 1,
-    "betaald": true,
-    "betalingscode": "K20250106100000",
-    "terugbetalingscode": null,
-    "bestellingsStatusId": 5,
-    "actiecodeGebruikt": false,
-    "bedrijfsnaam": "VDAB",
-    "btwNummer": "0887010362",
-    "voornaam": "Ad",
-    "familienaam": "Ministrateur",
-    "facturatieAdresId": 1,
-    "leveringsAdresId": 7
-}
 const bestellijnen = [
     {
         "artikelId": 2,
@@ -49,15 +33,52 @@ const bestellijnen = [
     }
 ]
 
+let timeoutId;
+//eventlistener voor "Nieuwe bestelling ophalen" button
+byId("nieuweBestellingBtn").addEventListener("click", async () => {
 
+    byId("nieuweBestellingBtn").disabled = true;
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+        byId("nieuweBestellingBtn").disabled = false;
+    }, 8000); // Button weer inschakelen na 8 seconden
+    await getBestelling()
+})
 
-if (bestelling) {
-    verberg("geenBestellingen")
-    byId("bestelId").textContent = bestelling.bestelId;
-    verwerkBestellijnen(bestellijnen)
-} else{
-    toon("geenBestellingen")
+//deze function wordt uitgevoerd wanneer magazijnier op "Nieuwe bestelling ophalen" klikt
+async function getBestelling() {
+    const response = await fetch("bestellingen/findBestelling")
+    //wanneer er nieuwe bestellingen zijn, bestelling openen en bestelId op scherm tonen
+    if (response.ok) {
+        verberg("storing")
+        verberg("geenBestellingen")
+        verberg("nieuweBestellingBtn")
+        toon("orderVoltooidBtn")
+        byId("bestelId").textContent = await response.json();
+        //verwerkBestellijnen functie komt hier
+        verwerkBestellijnen(bestellijnen)
+        return
+    }
+    // Wanneer er geen nieuwe bestellingen zijn
+    if (response.status === 404) {
+        toon("geenBestellingen")
+        toon("nieuweBestellingBtn")
+        verberg("orderVoltooidBtn")
+        byId("bestelId").innerHTML="";
+        // Na 8 seconden "geen bestelling" bericht laten verdwijnen
+        setTimeout(()=> verberg("geenBestellingen"), 8000)
+    } else{
+        verbergAlles()
+        toon("storing")
+    }
 }
+
+function verbergAlles(){
+    verberg("geenBestellingen")
+    verberg("nieuweBestellingBtn")
+    verberg("orderVoltooidBtn")
+}
+
 
 function verwerkBestellijnen(bestellijnen) {
     const tbody = byId("bestellingBody")
@@ -88,9 +109,10 @@ function verwerkBestellijnen(bestellijnen) {
 }
 
 
-let bestellijnCheckboxen = document.querySelectorAll('input[type="checkbox"]');
+
 //Eventlistener voor order voltooid button.
-document.addEventListener("change", () => {
+byId("main").addEventListener("change", () => {
+    let bestellijnCheckboxen = document.querySelectorAll('input[type="checkbox"]');
 
         //bestellijn doorstrepen wanneer ze aangevinkt is
         bestellijnCheckboxen.forEach(checkbox => {
@@ -112,3 +134,10 @@ document.addEventListener("change", () => {
         document.getElementById("orderVoltooidBtn").disabled = false;
     }
 )
+
+byId("orderVoltooidBtn").addEventListener("click", async () => {
+    console.log("clicked");
+    byId("orderVoltooidBtn").disabled = true;
+    byId("bestellingBody").innerHTML = "";
+    await getBestelling()
+})
