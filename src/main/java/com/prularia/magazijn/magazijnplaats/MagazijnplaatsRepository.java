@@ -1,5 +1,6 @@
 package com.prularia.magazijn.magazijnplaats;
 
+import com.prularia.magazijn.artikel.OnvoldoendeVoorraadException;
 import com.prularia.magazijn.pickingLocatie.PickingLocatie;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,7 @@ public class MagazijnplaatsRepository {
     public List<PickingLocatie> findLocatiesVoorBestelling(long bestelId) {
         var sql = """
                 SELECT
-                      mp.artikelId, a.naam as artikelNaam, mp.magazijnPlaatsId, mp.rij, mp.rek, 
+                      mp.artikelId, a.naam as artikelNaam, mp.magazijnPlaatsId, mp.rij, mp.rek,
                       mp.aantal AS voorraadInPlaats, bl.aantalBesteld
                 FROM magazijnplaatsen mp
                 JOIN artikelen a ON mp.artikelId = a.artikelId
@@ -74,6 +75,26 @@ public class MagazijnplaatsRepository {
                   where rij = ? and rek = ?
                   """;
         return jdbcClient.sql(sql).params(rij, rek).query(Long.class).optional();
+    }
+
+    public void pasMagazijnplaatsAan(long magazijnplaatsId, long aantal) {
+        var sql = """
+                  update magazijnplaatsen
+                  set aantal = aantal - ?
+                  where magazijnPlaatsId = ? and aantal >= ?
+                  """;
+        if (jdbcClient.sql(sql).params(aantal, magazijnplaatsId, aantal).update() == 0) {
+            var sqlMagazijnplaatsId = """
+                               select aantal
+                               from magazijnplaatsen
+                               where magazijnPlaatsId = ?
+                               """;
+            var result = jdbcClient.sql(sqlMagazijnplaatsId).param(magazijnplaatsId).query(Long.class).optional();
+            var magazijnplaatsAantal = result.orElseThrow(() -> new MagazijnplaatsNietGevondenException(magazijnplaatsId));
+            if (magazijnplaatsAantal < aantal) {
+                throw new OnvoldoendeVoorraadException(magazijnplaatsId, aantal);
+            }
+        }
     }
 }
 

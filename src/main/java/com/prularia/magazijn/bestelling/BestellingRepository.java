@@ -41,8 +41,7 @@ public class BestellingRepository {
     void rondBestellingAf(long bestelId) {
         var sql =
                 """
-                  update
-                bestell
+                  update bestellingen
                      set bestellingsStatusId =
                       (select bestellingsStatusId from
                 bestellingsstatussen where naam =

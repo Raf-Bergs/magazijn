@@ -36,7 +36,7 @@ class BestellingControllerTest {
     @Test
     void eenGoedePostVoorBestellingAfgerondWerkt() throws Exception {
         var json = Files.readString(testResources.resolve("goedeBestellingAfgerond.json"));
-        mockMvc.perform(post("/bestelling/{id}", idVanTestBestelling())
+        mockMvc.perform(post("/bestellingen/{id}", idVanTestBestelling())
                 .contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk());
     }
 }
