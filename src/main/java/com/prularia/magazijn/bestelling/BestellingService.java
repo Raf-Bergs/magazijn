@@ -6,6 +6,8 @@ import com.prularia.magazijn.magazijnplaats.MagazijnplaatsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 public class BestellingService {
@@ -17,6 +19,16 @@ public class BestellingService {
         this.bestellingRepository = bestellingRepository;
         this.artikelRepository = artikelRepository;
         this.magazijnplaatsRepository = magazijnplaatsRepository;
+    }
+
+
+    public Optional<Long> findBestelling() {
+        return bestellingRepository.findBestelling();
+    }
+
+    @Transactional
+    public void updateStatusToKlaarmaken(long bestelId) {
+        bestellingRepository.updateStatusToKlaarmaken(bestelId);
     }
 
     @Transactional
