@@ -1,38 +1,6 @@
 "use strict"
 import {byId, toon, verberg} from "./util.js";
 
-
-const bestellijnen = [
-    {
-        "artikelId": 2,
-        "locatie": "A12",
-        "naam": "emmer 12 l",
-        "beschrijving": "huishoudemmer inhoud 12 l",
-        "aantal": 2
-    },
-    {
-        "artikelId": 80,
-        "locatie": "A13",
-        "naam": "Klopboormachine 1000W",
-        "beschrijving": "klopboormachine 1000W blauw",
-        "aantal": 2
-    },
-    {
-        "artikelId": 89,
-        "locatie": "A14",
-        "naam": "Schuurmachine 600W",
-        "beschrijving": "Schuurmachine 600W groen",
-        "aantal": 1
-    },
-    {
-        "artikelId": 118,
-        "locatie": "A15",
-        "naam": "Multitool 450W",
-        "beschrijving": "Multitool 450W geel",
-        "aantal": 2
-    }
-]
-
 let timeoutId;
 //eventlistener voor "Nieuwe bestelling ophalen" button
 byId("nieuweBestellingBtn").addEventListener("click", async () => {
@@ -41,7 +9,7 @@ byId("nieuweBestellingBtn").addEventListener("click", async () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
         byId("nieuweBestellingBtn").disabled = false;
-    }, 8000); // Button weer inschakelen na 8 seconden
+    }, 5000); // Button weer inschakelen na 5 seconden
     await getBestelling()
 })
 
@@ -54,9 +22,9 @@ async function getBestelling() {
         verberg("geenBestellingen")
         verberg("nieuweBestellingBtn")
         toon("orderVoltooidBtn")
-        byId("bestelId").textContent = await response.json();
-        //verwerkBestellijnen functie komt hier
-        verwerkBestellijnen(bestellijnen)
+        const bestelId= await response.json()
+        byId("bestelId").textContent = bestelId
+        await getBestellijnen(bestelId)
         return
     }
     // Wanneer er geen nieuwe bestellingen zijn
@@ -79,8 +47,18 @@ function verbergAlles(){
     verberg("orderVoltooidBtn")
 }
 
+async function getBestellijnen(bestelId){
+    const response = await fetch(`bestelling/${bestelId}`)
+    if (response.ok) {
+        const bestellijnen = await response.json()
+        verwerkBestellijnen(bestellijnen)
+    }
+
+}
+
 
 function verwerkBestellijnen(bestellijnen) {
+
     const tbody = byId("bestellingBody")
     for (const bestellijn of bestellijnen) {
         const tr = tbody.insertRow()
@@ -90,14 +68,14 @@ function verwerkBestellijnen(bestellijnen) {
         const div = document.createElement("div");
         div.addEventListener('click', () => {
             sessionStorage.setItem("artikelId", bestellijn.artikelId)
-            //window.location = "artikelinfo.html"
+            window.open("test.html")
         })
         td.appendChild(checkbox);
         td.appendChild(div);
         const locatie = document.createElement("span");
         locatie.textContent = ` ${bestellijn.locatie} `
         const beschrijving = document.createElement("span");
-        beschrijving.textContent = bestellijn.beschrijving
+        beschrijving.textContent = bestellijn.naam
         const aantal = document.createElement("span");
         aantal.textContent = ` x ${bestellijn.aantal}`;
         div.appendChild(locatie);
@@ -136,7 +114,6 @@ byId("main").addEventListener("change", () => {
 )
 
 byId("orderVoltooidBtn").addEventListener("click", async () => {
-    console.log("clicked");
     byId("orderVoltooidBtn").disabled = true;
     byId("bestellingBody").innerHTML = "";
     await getBestelling()

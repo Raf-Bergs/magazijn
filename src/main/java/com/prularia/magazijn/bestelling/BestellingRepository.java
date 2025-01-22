@@ -29,7 +29,7 @@ public class BestellingRepository {
     public void updateStatusToKlaarmaken(long bestelId) {
         var sql= """
                 UPDATE bestellingen
-                SET bestellingsStatusId = 4 --status verandert naar 'klaarmaken(4)'
+                SET bestellingsStatusId = 4  -- status verandert naar 'klaarmaken(4)'
                 WHERE bestelId = ?
                 """;
         jdbcClient.sql(sql)
