@@ -2,42 +2,58 @@
 import {byId, toon, verberg} from "./util.js";
 
 const leveringsId = localStorage.getItem("leveringsId");
-getLeveringslijnen(leveringsId);
-
+const leveringslijnen = await getLeveringslijnen(leveringsId);
+verwerkLeveringslijnen(leveringslijnen);
 
 async function getLeveringslijnen(leveringsId) {
     // TODO: juiste url invullen
-    // TODO: namen van DTO juist zetten
-    const response = await fetch("TODO");
+    const response = await fetch("./leveringslijnen.json");
     if (response.ok) {
-        // TODO: toon/verberg nodige velden
-        const leveringslijnen = await response.json();
-        verwerkLeveringslijnen(leveringslijnen);
-    }
-    if (response.status === 404) {
-        // TODO: toon/verberg nodige velden
+        verberg("storing");
+        verberg("geenLeveringen");
+        toon("leveringVoltooidButton");
+        return  await response.json();
+    } else if (response.status === 404) {
+        verberg("storing");
+        toon("geenLeveringen");
+        verberg("leveringVoltooidButton");
     } else {
-        // TODO: toon/verberg nodige velden
+        toon("storing");
+        verberg("geenLeveringen");
+        verberg("leveringVoltooidButton");
     }
 }
 
-function verwerkLeveringslijnen(leverinslijnen) {
-    const table = byId("leveringsBody");
-    for (const leveringslijn of leverinslijnen) {
+function verwerkLeveringslijnen(leveringslijnen) {
+    const table = byId("leveringBody");
+    for (const leveringslijn of leveringslijnen) {
         const tr = table.insertRow();
 
         const checkboxCell = tr.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        // TODO: Wat is dit?
-        checkbox.addEventListener("click", () => {
-            sessionStorage.setItem("artikelId", leveringslijn.artikelId);
-        });
         checkboxCell.appendChild(checkbox);
+        checkbox.onchange = () => {
+            if (checkbox.checked) {
+                tr.classList.add("checked");
+            } else {
+                tr.classList.remove("checked");
+            }
+        }
 
         // TODO: namen van DTO juist zetten
         tr.insertCell().textContent = leveringslijn.locatie;
-        tr.insertCell().textContent = leveringslijn.naam;
+
+        const naamCell = tr.insertCell();
+        const link = document.createElement("a");
+        link.href = "#";
+        link.onclick = function () {
+            localStorage.setItem("artikelId", leveringslijn.artikelId);
+            window.open("artikel.html");
+        };
+        link.textContent = leveringslijn.naam;
+        naamCell.appendChild(link);
+
         tr.insertCell().textContent = leveringslijn.aantal;
     }
 }
@@ -46,17 +62,18 @@ function verwerkLeveringslijnen(leverinslijnen) {
 byId("main").addEventListener("change", () => {
     const bestellijnCheckboxen = document.querySelectorAll('input[type="checkbox"]');
 
-    // TODO: veldjes doorstrepen
-    bestellijnCheckboxen.forEach(checkbox => {
-        if (checkbox.checked) {
-            //checkbox.nex
-        }
-    });
-
     const alleCheckboxenAangevinkt = Array.from(bestellijnCheckboxen).every(checkbox => checkbox.checked);
     byId("leveringVoltooidButton").disabled = !alleCheckboxenAangevinkt;
 });
 
-byId("leveringVoltooidButton").addEventListener("click", () => {
+byId("leveringVoltooidButton").addEventListener("click", async () => {
+    // TODO: post request met levering voltooid naar juiste url
+    await fetch(`leveringVoltooid/${leveringsId}`, {
+        method: "POST",
+        body: JSON.stringify(leveringslijnen),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
     window.location = "levering.html"
 })
