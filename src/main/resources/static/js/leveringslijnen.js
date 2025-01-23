@@ -7,6 +7,7 @@ verwerkLeveringslijnen(leveringslijnen);
 
 async function getLeveringslijnen(leveringsId) {
     // TODO: juiste url invullen
+    // juiste url is leveringslijnen
     const response = await fetch("./leveringslijnen.json");
     if (response.ok) {
         verberg("storing");
@@ -29,6 +30,7 @@ function verwerkLeveringslijnen(leveringslijnen) {
     for (const leveringslijn of leveringslijnen) {
         const tr = table.insertRow();
 
+        // Checkbox
         const checkboxCell = tr.insertCell();
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
@@ -39,11 +41,19 @@ function verwerkLeveringslijnen(leveringslijnen) {
             } else {
                 tr.classList.remove("checked");
             }
+            localStorage.setItem(`leverCheckbox${leveringslijn.artikelId}`, `${checkbox.checked}`);
+        };
+        if (localStorage.getItem(`leverCheckbox${leveringslijn.artikelId}`) === "true") {
+            checkbox.checked = true;
+            tr.classList.add("checked");
         }
 
+
         // TODO: namen van DTO juist zetten
+        // locatie
         tr.insertCell().textContent = leveringslijn.locatie;
 
+        // artikel naam
         const naamCell = tr.insertCell();
         const link = document.createElement("a");
         link.href = "#";
@@ -54,7 +64,8 @@ function verwerkLeveringslijnen(leveringslijnen) {
         link.textContent = leveringslijn.naam;
         naamCell.appendChild(link);
 
-        tr.insertCell().textContent = leveringslijn.aantal;
+        // aantal
+        tr.insertCell().textContent = `x${leveringslijn.aantal}`;
     }
 }
 
@@ -74,6 +85,8 @@ byId("leveringVoltooidButton").addEventListener("click", async () => {
         headers: {
             "Content-Type": "application/json"
         }
-    })
+    });
+    localStorage.clear();
+    sessionStorage.clear();
     window.location = "levering.html"
 })
