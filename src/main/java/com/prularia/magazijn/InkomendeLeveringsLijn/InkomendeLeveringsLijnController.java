@@ -1,4 +1,4 @@
-package com.prularia.magazijn.InkomendeLeveringslijn;
+package com.prularia.magazijn.InkomendeLeveringsLijn;
 
 
 import org.springframework.web.bind.annotation.GetMapping;
