@@ -1,0 +1,138 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.fout {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-size: 2em;
+}
+
+#geenBestellingen {
+    font-weight: bold;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-size: 2em;
+    text-align: center;
+    margin: 3em;
+
+}
+
+header {
+    background-color: #ABD7A8;
+    color: #fff;
+    text-align: center;
+    padding: 1em 0;
+}
+
+
+.logo {
+    max-width: 300px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+
+main {
+    padding: 20px;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+th {
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    padding: 10px;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 2em;
+}
+
+
+tr:nth-child(odd) {
+    background-color: #ABD7A8;
+}
+
+
+main a {
+    text-align: center;
+}
+
+
+.checked {
+    text-decoration: line-through;
+}
+
+main div {
+    display: inline;
+    cursor: pointer;
+}
+
+main td:hover {
+    background-color: #f5b02b;
+}
+
+button:disabled {
+    background-color: #bab8b8;
+}
+
+button {
+    background-color: #4CAF50;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    outline: 0;
+    padding: 8px 16px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.8em;
+    border-radius: 15px;
+}
+
+input[type='checkbox'] {
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 5px;
+    border: 2px solid #555;
+}
+
+input[type='checkbox']:checked {
+    background: #3b3d46;
+}
+
+dt {
+    font-weight: bold;
+    padding-bottom: 4px;
+    padding-top: 2px;
+}
+
+h1 {
+    color: #ABD7A8;
+}
+
+.container {
+    margin: 10px;
+    padding: 20px;
+    display: grid;
+    place-items: center;
+}

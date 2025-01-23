@@ -1,0 +1,17 @@
+{
+  "artikelId": 1,
+  "ean": "465789",
+  "naam": "Tafel",
+  "beschrijving": "Een tafel van hout",
+  "prijs": 25.0,
+  "gewichtInGram": 3000,
+  "bestelpeil": 25,
+  "voorraad": 18,
+  "minimumVoorraad": 5,
+  "maximumVoorraad": 35,
+  "levertijd": 7,
+  "aantalBesteldLeverancier": 12,
+  "maxAantalInMagazijnPLaats": 5,
+  "leveranciersId": 3
+}
+
