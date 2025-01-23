@@ -1,123 +1,180 @@
-// Javascript is geen leuke programmeertaal. Maar wanneer het werkt, voelt dat goed :)
-// Om dit leesbaar te maken heb ik zo veel mogelijk comments gebruikt, maar toch lijkt dit op spaghetti code
-// (I promise you it's not spaghetti code it's just javascript :D)
-"use strict"
+"use strict";
+
 import {byId, toon, verberg} from "./util.js";
 
-let timeoutId;
+document.addEventListener("DOMContentLoaded", () => {
+    let timeoutId;
 
-// Eventlistener voor "Nieuwe bestelling ophalen" button
-byId("nieuweBestellingBtn").addEventListener("click", async () => {
-    // Als er geen nieuwe bestellingen zijn, button uitschakelen (5 seconden cooldown)
-    byId("nieuweBestellingBtn").disabled = true;
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-        byId("nieuweBestellingBtn").disabled = false;
-    }, 5000); // Button weer inschakelen na 5 seconden
-    await getBestelling()
-})
+    // Eventlistener for "Nieuwe bestelling ophalen" button
+    byId("nieuweBestellingBtn").addEventListener("click", async () => {
 
-// Deze function wordt uitgevoerd wanneer magazijnier op "Nieuwe bestelling ophalen" klikt
-async function getBestelling() {
-    const response = await fetch("bestellingen/findBestelling")
-    // Wanneer er nieuwe bestellingen zijn, wordt de bestelling geopend en bestelId op het scherm getoond
-    if (response.ok) {
-        verberg("storing")
-        verberg("geenBestellingen")
-        verberg("nieuweBestellingBtn")
-        toon("orderVoltooidBtn")
-        const bestelId= await response.json()
-        byId("bestelId").textContent = bestelId
-        await getBestellijnen(bestelId)
-        return
-    }
-    // Wanneer er geen nieuwe bestellingen zijn
-    if (response.status === 404) {
-        toon("geenBestellingen")
-        toon("nieuweBestellingBtn")
-        verberg("orderVoltooidBtn")
-        byId("bestelId").innerHTML="";
-        // Na 8 seconden "geen bestelling" bericht laten verdwijnen
-        setTimeout(()=> verberg("geenBestellingen"), 8000)
-    } else{
-        verbergAlles()
-        toon("storing")
-    }
-}
-//fouten verbergen function wanneer alles fout loopt :(
-function verbergAlles(){
-    verberg("geenBestellingen")
-    verberg("nieuweBestellingBtn")
-    verberg("orderVoltooidBtn")
-}
+        // Button 5 seconden uitschakelen om spamming tegen te gaan
+        byId("nieuweBestellingBtn").disabled = true;
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            byId("nieuweBestellingBtn").disabled = false;
+        }, 5000);
 
-async function getBestellijnen(bestelId){
-    const response = await fetch(`bestelling/${bestelId}`)
-    if (response.ok) {
-        const bestellijnen = await response.json()
-        verwerkBestellijnen(bestellijnen)
+        await getBestelling();
+
+    });
+
+    // Fetch nieuwe bestelling
+    async function getBestelling() {
+
+        const response = await fetch("bestellingen/findBestelling");
+
+        if (response.ok) {
+            verberg("storing");
+            verberg("geenBestellingen");
+            verberg("nieuweBestellingBtn");
+            toon("orderVoltooidBtn");
+
+            const bestelId = await response.json();
+            byId("bestelId").textContent = bestelId;
+            localStorage.setItem("bestelId", JSON.stringify(bestelId));
+
+            await getBestellijnen(bestelId);
+            return
+        }
+        if (response.status === 404) {
+            toon("geenBestellingen");
+            toon("nieuweBestellingBtn");
+            verberg("orderVoltooidBtn");
+            byId("bestelId").textContent = "";
+
+            // verberg "geenBestellingen" bericht na 8 seconden
+            setTimeout(() => verberg("geenBestellingen"), 8000);
+        } else {
+            throw new Error("Unexpected response status: " + response.status);
+        }
+
     }
 
-}
+    // Alle errors verbergen
+    function verbergAlles() {
+        verberg("geenBestellingen");
+        verberg("nieuweBestellingBtn");
+        verberg("orderVoltooidBtn");
+    }
 
-// Verwerkt en toont de bestellijnen in de tabel
-function verwerkBestellijnen(bestellijnen) {
-    const tbody = byId("bestellingBody");
+    // Fetch en verwerk bestellijnen
+    async function getBestellijnen(bestelId) {
+        const response = await fetch(`bestelling/${bestelId}`);
+        if (response.ok) {
+            const bestellijnen = await response.json();
+            verwerkBestellijnen(bestellijnen);
+        } else {
+            throw new Error("Failed to fetch bestellijnen");
+        }
+    }
 
-    bestellijnen.forEach(bestellijn => {
-        const tr = tbody.insertRow();
-        const td = tr.insertCell();
+    // verwerk en bestellijnen tonen
+    function verwerkBestellijnen(bestellijnen) {
+        const tbody = byId("bestellingBody");
+        tbody.innerHTML = "";
 
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
+        bestellijnen.forEach((bestellijn, index) => {
+            const tr = tbody.insertRow();
 
-        const div = document.createElement("div");
-        div.addEventListener("click", () => {
-            sessionStorage.setItem("artikelId", bestellijn.artikelId);
-            window.open("test.html");
+            const td = tr.insertCell();
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = `checkbox-${index}`;
+
+            const div = document.createElement("div");
+            div.addEventListener("click", () => {
+                sessionStorage.setItem("artikelId", bestellijn.artikelId);
+                window.location = "detail.html";
+            });
+
+            td.appendChild(checkbox);
+            td.appendChild(div);
+
+            const locatie = document.createElement("span");
+            locatie.textContent = ` ${bestellijn.locatie}, `;
+
+            const beschrijving = document.createElement("span");
+            beschrijving.textContent = bestellijn.naam;
+
+            const aantal = document.createElement("span");
+            aantal.textContent = `, x${bestellijn.aantal}`;
+
+            div.appendChild(locatie);
+            div.appendChild(beschrijving);
+            div.appendChild(aantal);
+
+            // het laden van checkbox uit localstorage
+            const savedState = localStorage.getItem(`checkbox-${index}`);
+            checkbox.checked = savedState === "true";
         });
 
-        td.appendChild(checkbox);
-        td.appendChild(div);
-
-        const locatie = document.createElement("span");
-        locatie.textContent = ` ${bestellijn.locatie}, `;
-
-        const beschrijving = document.createElement("span");
-        beschrijving.textContent = bestellijn.naam;
-
-        const aantal = document.createElement("span");
-        aantal.textContent = `, x${bestellijn.aantal}`;
-
-        div.appendChild(locatie);
-        div.appendChild(beschrijving);
-        div.appendChild(aantal);
-    });
-}
-
-
-
-//'Change' eventlistener voor wijzigingen in de bestellijn-checkboxen realtime nakijken
-byId("main").addEventListener("change", () => {
-    const bestellijnCheckboxen = document.querySelectorAll('input[type="checkbox"]');
-
-    //  Bijbehorende tekst doorstrepen (met css) wanneer een checkbox aangevinkt is
-    bestellijnCheckboxen.forEach(checkbox => {
-        if (checkbox.checked) {
-            checkbox.nextElementSibling.classList.add("checked");
-        } else {
-            checkbox.nextElementSibling.classList.remove("checked");
+        let jsonData = [];
+        for (const bestellijn of bestellijnen) {
+            let obj = {
+                "artikelId": bestellijn.artikelId,
+                "aantal": bestellijn.aantal,
+                "magazijnPlaats": `${bestellijn.locatie}`
+            }
+            jsonData.push(obj);
         }
+
+
+        //  "Order Voltooid" button click
+        byId("orderVoltooidBtn").addEventListener("click", async () => {
+            byId("orderVoltooidBtn").disabled = true;
+            byId("bestellingBody").innerHTML = "";
+            const response = await fetch(`bestellingen/${localStorage.getItem("bestelId")}`, {
+                method: "POST",
+                headers: {'Content-Type': "application/json"},
+                body:JSON.stringify(jsonData)
+            })
+            if(response.ok) {
+                console.log("goed");
+            }else{
+                console.log("error");
+            }
+            localStorage.clear();
+            await getBestelling();
+
+        });
+    }
+
+    // Evenlistener for checkbox
+    byId("main").addEventListener("change", () => {
+        const checkboxes = document.querySelectorAll("input[type='checkbox']");
+
+        checkboxes.forEach((checkbox) => {
+            const checkboxId = checkbox.id;
+
+            if (checkbox.checked) {
+                checkbox.nextElementSibling?.classList.add("checked");
+                localStorage.setItem(checkboxId, "true");
+            } else {
+                checkbox.nextElementSibling?.classList.remove("checked");
+                localStorage.setItem(checkboxId, "false");
+            }
+        });
+
+        const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
+        byId("orderVoltooidBtn").disabled = !allChecked;
     });
 
-    // Controleren of alle checkboxen zijn aangevinkt
-    const alleCheckboxenAangevinkt = Array.from(bestellijnCheckboxen).every(cb => cb.checked);
-    byId("orderVoltooidBtn").disabled = !alleCheckboxenAangevinkt; // Order voltooid button wordt enkel aangezet wanneer alle checkoxen aangevinkt zijn
+
+    // bij het laden van pagina, checken of bestelId bestaat in localstorage
+    (async () => {
+
+        const storedBestelId = localStorage.getItem("bestelId");
+        if (storedBestelId) {
+            await getBestelling();
+            const checkboxes = document.querySelectorAll("input[type='checkbox']");
+            const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    checkbox.nextElementSibling?.classList.add("checked");
+                }
+            })
+            byId("orderVoltooidBtn").disabled = !allChecked;
+        }
+    })();
 });
-
-
-byId("orderVoltooidBtn").addEventListener("click", async () => {
-    byId("orderVoltooidBtn").disabled = true;
-    byId("bestellingBody").innerHTML = "";
-    await getBestelling()
-})
