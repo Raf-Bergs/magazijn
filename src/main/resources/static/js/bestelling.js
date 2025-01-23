@@ -1,10 +1,14 @@
+// Javascript is geen leuke programmeertaal. Maar wanneer het werkt, voelt dat goed :)
+// Om dit leesbaar te maken heb ik zo veel mogelijk comments gebruikt, maar toch lijkt dit op spaghetti code
+// (I promise you it's not spaghetti code it's just javascript :D)
 "use strict"
 import {byId, toon, verberg} from "./util.js";
 
 let timeoutId;
-//eventlistener voor "Nieuwe bestelling ophalen" button
-byId("nieuweBestellingBtn").addEventListener("click", async () => {
 
+// Eventlistener voor "Nieuwe bestelling ophalen" button
+byId("nieuweBestellingBtn").addEventListener("click", async () => {
+    // Als er geen nieuwe bestellingen zijn, button uitschakelen (5 seconden cooldown)
     byId("nieuweBestellingBtn").disabled = true;
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
@@ -13,10 +17,10 @@ byId("nieuweBestellingBtn").addEventListener("click", async () => {
     await getBestelling()
 })
 
-//deze function wordt uitgevoerd wanneer magazijnier op "Nieuwe bestelling ophalen" klikt
+// Deze function wordt uitgevoerd wanneer magazijnier op "Nieuwe bestelling ophalen" klikt
 async function getBestelling() {
     const response = await fetch("bestellingen/findBestelling")
-    //wanneer er nieuwe bestellingen zijn, bestelling openen en bestelId op scherm tonen
+    // Wanneer er nieuwe bestellingen zijn, wordt de bestelling geopend en bestelId op het scherm getoond
     if (response.ok) {
         verberg("storing")
         verberg("geenBestellingen")
@@ -40,7 +44,7 @@ async function getBestelling() {
         toon("storing")
     }
 }
-
+//fouten verbergen function wanneer alles fout loopt :(
 function verbergAlles(){
     verberg("geenBestellingen")
     verberg("nieuweBestellingBtn")
@@ -56,62 +60,61 @@ async function getBestellijnen(bestelId){
 
 }
 
-
+// Verwerkt en toont de bestellijnen in de tabel
 function verwerkBestellijnen(bestellijnen) {
+    const tbody = byId("bestellingBody");
 
-    const tbody = byId("bestellingBody")
-    for (const bestellijn of bestellijnen) {
-        const tr = tbody.insertRow()
-        const td = tr.insertCell()
+    bestellijnen.forEach(bestellijn => {
+        const tr = tbody.insertRow();
+        const td = tr.insertCell();
+
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
+
         const div = document.createElement("div");
-        div.addEventListener('click', () => {
-            sessionStorage.setItem("artikelId", bestellijn.artikelId)
-            window.open("test.html")
-        })
+        div.addEventListener("click", () => {
+            sessionStorage.setItem("artikelId", bestellijn.artikelId);
+            window.open("test.html");
+        });
+
         td.appendChild(checkbox);
         td.appendChild(div);
+
         const locatie = document.createElement("span");
-        locatie.textContent = ` ${bestellijn.locatie} `
+        locatie.textContent = ` ${bestellijn.locatie}, `;
+
         const beschrijving = document.createElement("span");
-        beschrijving.textContent = bestellijn.naam
+        beschrijving.textContent = bestellijn.naam;
+
         const aantal = document.createElement("span");
-        aantal.textContent = ` x ${bestellijn.aantal}`;
+        aantal.textContent = `, x${bestellijn.aantal}`;
+
         div.appendChild(locatie);
         div.appendChild(beschrijving);
         div.appendChild(aantal);
-
-    }
-
+    });
 }
 
 
 
-//Eventlistener voor order voltooid button.
+//'Change' eventlistener voor wijzigingen in de bestellijn-checkboxen realtime nakijken
 byId("main").addEventListener("change", () => {
-    let bestellijnCheckboxen = document.querySelectorAll('input[type="checkbox"]');
+    const bestellijnCheckboxen = document.querySelectorAll('input[type="checkbox"]');
 
-        //bestellijn doorstrepen wanneer ze aangevinkt is
-        bestellijnCheckboxen.forEach(checkbox => {
-            if (checkbox.checked) {
-                checkbox.nextElementSibling.classList.add('checked');
-            } else {
-
-                checkbox.nextElementSibling.classList.remove('checked');
-            }
-        });
-
-        //order voltooid button inschakelen wanneer alle checkboxen aangevinkt staan
-        for (let i = 0; i < bestellijnCheckboxen.length; i++) {
-            if (!bestellijnCheckboxen[i].checked) {
-                document.getElementById("orderVoltooidBtn").disabled = true;
-                return
-            }
+    //  Bijbehorende tekst doorstrepen (met css) wanneer een checkbox aangevinkt is
+    bestellijnCheckboxen.forEach(checkbox => {
+        if (checkbox.checked) {
+            checkbox.nextElementSibling.classList.add("checked");
+        } else {
+            checkbox.nextElementSibling.classList.remove("checked");
         }
-        document.getElementById("orderVoltooidBtn").disabled = false;
-    }
-)
+    });
+
+    // Controleren of alle checkboxen zijn aangevinkt
+    const alleCheckboxenAangevinkt = Array.from(bestellijnCheckboxen).every(cb => cb.checked);
+    byId("orderVoltooidBtn").disabled = !alleCheckboxenAangevinkt; // Order voltooid button wordt enkel aangezet wanneer alle checkoxen aangevinkt zijn
+});
+
 
 byId("orderVoltooidBtn").addEventListener("click", async () => {
     byId("orderVoltooidBtn").disabled = true;
