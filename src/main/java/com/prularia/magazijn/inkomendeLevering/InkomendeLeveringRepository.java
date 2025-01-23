@@ -11,11 +11,11 @@ public class InkomendeLeveringRepository {
 
     public int createInkomendeLevering(InkomendeLevering inkomendeLevering) {
         var sql = """
-                INSERT INTO inkomendeLeveringen (inkomendeLeveringsId, leveranciersId, leveringsbonNummer, leveringsbondatum, leverDatum, ontvangerPersoneelslidId)
+                INSERT INTO inkomendeLeveringen (leveranciersId, leveringsbonNummer, leveringsbondatum, leverDatum, ontvangerPersoneelslidId)
                 VALUES (?, ?, ?, ?, ?);
                 """;
         return jdbcClient.sql(sql)
-                .params(inkomendeLevering.getInkomendeLeveringId(), inkomendeLevering.getLeveringId(), inkomendeLevering.getLeveringsbonNummer(), inkomendeLevering.getLeveringsbondatum(),inkomendeLevering.getLeverDatum(), inkomendeLevering.getOntvangerPersoneelslidId())
+                .params(inkomendeLevering.getLeveringId(), inkomendeLevering.getLeveringsbonNummer(), inkomendeLevering.getLeveringsbondatum(),inkomendeLevering.getLeverDatum(), inkomendeLevering.getOntvangerPersoneelslidId())
                 .update();
     }
 
