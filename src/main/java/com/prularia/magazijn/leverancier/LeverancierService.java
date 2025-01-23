@@ -12,7 +12,7 @@ public class LeverancierService {
         this.leverancierRepository = leverancierRepository;
     }
 
-    public List<Leverancier> findAllLeveranciers() {
+    public List<LeverancierNaamEnIdDTO> findAllLeveranciers() {
         return leverancierRepository.findAllLeveranciers();
     }
 }

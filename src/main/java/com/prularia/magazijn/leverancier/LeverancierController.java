@@ -16,7 +16,7 @@ public class LeverancierController {
     }
 
     @GetMapping("/findLeveranciers")
-    public List<Leverancier> getAllLeveranciers() {
+    public List<LeverancierNaamEnIdDTO> getAllLeveranciers() {
         return leverancierService.findAllLeveranciers();
     }
 }

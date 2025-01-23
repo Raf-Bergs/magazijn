@@ -13,13 +13,13 @@ public class LeverancierRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public List<Leverancier> findAllLeveranciers() {
+    public List<LeverancierNaamEnIdDTO> findAllLeveranciers() {
         var sql = """
-                SELECT leveranciersId, naam, btwNummer, straat, huisNummer, bus, plaatsId, familienaamContactpersoon, voornaamContactpersoon
+                SELECT leveranciersId, naam
                 FROM  leveranciers
                 ORDER BY leveranciersId
                 """;
 
-        return jdbcClient.sql(sql).query(Leverancier.class).list();
+        return jdbcClient.sql(sql).query(LeverancierNaamEnIdDTO.class).list();
     }
 }
