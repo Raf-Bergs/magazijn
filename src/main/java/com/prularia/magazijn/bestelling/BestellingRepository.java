@@ -19,12 +19,14 @@ public class BestellingRepository {
         var sql = """
             SELECT bestelId
             FROM bestellingen
-            WHERE bestellingsStatusId = 2 -- Alleen bestellingen met status 'Betaald'
+            WHERE bestellingsStatusId in (2, 4)-- Alleen bestellingen met status 'Betaald'
             ORDER BY bestelDatum ASC
             LIMIT 1
             """;
         return jdbcClient.sql(sql).query(Long.class).optional();
     }
+
+
 
     public void updateStatusToKlaarmaken(long bestelId) {
         var sql= """
