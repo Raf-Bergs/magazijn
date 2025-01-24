@@ -4,6 +4,30 @@ body {
     padding: 0;
     background-color: #f4f4f4;
 }
+
+dl {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-left: 5px solid #ABD7A8;
+    text-align: center;
+}
+
+dt {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 1.5rem;
+}
+
+dd {
+    margin-left: 20px;
+    color: #333;
+    font-size: 1.2rem;
+}
+
 .fout {
     background-color: red;
     color: white;
@@ -13,7 +37,7 @@ body {
     font-size: 2em;
 }
 
-#geenBestellingen{
+#geenBestellingen {
     font-weight: bold;
     padding-left: 0.5em;
     padding-right: 0.5em;
@@ -70,7 +94,7 @@ tr:nth-child(odd) {
 }
 
 
-main a{
+main a {
     text-align: center;
 }
 
@@ -79,15 +103,16 @@ main a{
     text-decoration: line-through;
 }
 
-main div{
-    display:inline;
+main div {
+    display: inline;
     cursor: pointer;
 }
-main td:hover{
+
+main td:hover {
     background-color: #f5b02b;
 }
 
-button:disabled{
+button:disabled {
     background-color: #bab8b8;
 }
 
@@ -106,34 +131,26 @@ button {
 }
 
 input[type='checkbox'] {
-    -webkit-appearance:none;
-    width:30px;
-    height:30px;
-    background:white;
-    border-radius:5px;
-    border:2px solid #555;
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 5px;
+    border: 2px solid #555;
 }
+
 input[type='checkbox']:checked {
     background: #3b3d46;
 }
 
-#nieuweBestellingBtn{
+#nieuweBestellingBtn {
     font-size: 2em;
     margin-top: 0.5em;
-dt {
-    font-weight: bold;
-    padding-bottom: 4px;
-    padding-top: 2px;
-}
 
-h1 {
-    color: #ABD7A8;
-}
 
-.container {
-    margin: 10px;
-    padding: 20px;
-    display: grid;
-    place-items: center;
-}
+    h1 {
+        color: #ABD7A8;
+    }
+
+
 }

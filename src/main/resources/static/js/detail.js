@@ -3,12 +3,12 @@ import {setText, toon, verberg} from "./util.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     verberg("info", "nietGevonden", "storing");
-    const artikelId = JSON.parse(localStorage.getItem("artikelId"))
+    const artikelId = JSON.parse(sessionStorage.getItem("artikelId"))
     findById(artikelId).then(r => console.log(artikelId));
 });
 
 async function findById(id) {
-    const dataSource = '../voorbeeldArtikelen.json'
+    const dataSource = 'artikelen/' + id;
     const response = await fetch(dataSource);
     if (response.ok) {
         const artikel = await response.json();
