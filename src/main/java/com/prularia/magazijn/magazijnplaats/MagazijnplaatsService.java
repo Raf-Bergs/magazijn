@@ -23,7 +23,7 @@ public class MagazijnplaatsService {
             throw new IllegalArgumentException("Aantal moet groter zijn dan 0.");
         }
 
-        // Haal het huidige aantal op de magazijnplaats op
+        // Haal het huidige aantal van de magazijnplaats op
         int huidigAantal = magazijnplaatsRepository.getHuidigAantalOpMagazijnplaats(dto.magazijnplaatsId());
 
         // Haal het maximale aantal in de magazijnplaats op
