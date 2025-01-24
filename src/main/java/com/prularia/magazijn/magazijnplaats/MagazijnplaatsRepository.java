@@ -96,5 +96,14 @@ public class MagazijnplaatsRepository {
             }
         }
     }
+
+    public List<Magazijnplaats> findPlaatsenByArtikelId(long artikelId) {
+        var sql = """
+                  select magazijnPlaatsId, artikelId, rij, rek, aantal
+                  from magazijnplaatsen
+                  where artikelId = ?
+                  """;
+        return jdbcClient.sql(sql).param(artikelId).query(Magazijnplaats.class).list();
+    }
 }
 
