@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 
 public class InkomendeLevering {
     private final long inkomendeLeveringId;
-    private final long leveringId;
+    private final long leveranciersId;
     private final String leveringsbonNummer;
     private final LocalDateTime leveringsbondatum;
     private final LocalDateTime leverDatum;
     private final long ontvangerPersoneelslidId;
 
-    public InkomendeLevering(long inkomendeLeveringId, long leveringId, String leveringsbonNummer, LocalDateTime leveringsbondatum, LocalDateTime leverDatum, long ontvangerPersoneelslidId) {
+    public InkomendeLevering(long inkomendeLeveringId, long leveranciersId, String leveringsbonNummer, LocalDateTime leveringsbondatum, LocalDateTime leverDatum, long ontvangerPersoneelslidId) {
         this.inkomendeLeveringId = inkomendeLeveringId;
-        this.leveringId = leveringId;
+        this.leveranciersId = leveranciersId;
         this.leveringsbonNummer = leveringsbonNummer;
         this.leveringsbondatum = leveringsbondatum;
         this.leverDatum = leverDatum;
@@ -39,7 +39,7 @@ public class InkomendeLevering {
         return leveringsbonNummer;
     }
 
-    public long getLeveringId() {
-        return leveringId;
+    public long getLeveranciersId() {
+        return leveranciersId;
     }
 }
