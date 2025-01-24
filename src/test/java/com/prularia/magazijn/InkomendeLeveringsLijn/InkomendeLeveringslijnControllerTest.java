@@ -26,6 +26,8 @@ class InkomendeLeveringslijnControllerTest {
                         status().isOk(),
                         jsonPath("$[0].inkomendeLeveringsId").isNumber(),
                         jsonPath("$[0].artikelId").isNumber(),
+                        jsonPath("$[0].naam").isString(),
+                        jsonPath("$[0].beschrijving").isString(),
                         jsonPath("$[0].aantalGoedgekeurd").isNumber(),
                         jsonPath("$[0].aantalTeruggestuurd").isNumber(),
                         jsonPath("$[0].magazijnPlaatsId").isNumber(),
