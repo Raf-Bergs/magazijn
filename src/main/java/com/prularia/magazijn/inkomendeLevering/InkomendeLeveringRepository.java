@@ -1,6 +1,7 @@
 package com.prularia.magazijn.inkomendeLevering;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,14 +15,19 @@ public class InkomendeLeveringRepository {
     //.params(...)
     //.update(keyHolder);
     //return keyHolder.getKey().longValue();
-    public int createInkomendeLevering(InkomendeLevering inkomendeLevering) {
+    public long createInkomendeLevering(InkomendeLevering inkomendeLevering) {
         var sql = """
                 INSERT INTO inkomendeLeveringen (leveranciersId, leveringsbonNummer, leveringsbondatum, leverDatum, ontvangerPersoneelslidId)
                 VALUES (?, ?, ?, ?, ?);
                 """;
-        return jdbcClient.sql(sql)
+
+        var keyHolder = new GeneratedKeyHolder();
+
+         jdbcClient.sql(sql)
                 .params(inkomendeLevering.getLeveranciersId(), inkomendeLevering.getLeveringsbonNummer(), inkomendeLevering.getLeveringsbondatum(),inkomendeLevering.getLeverDatum(), inkomendeLevering.getOntvangerPersoneelslidId())
-                .update();
+                .update(keyHolder);
+
+         return keyHolder.getKey().longValue();
     }
 
 

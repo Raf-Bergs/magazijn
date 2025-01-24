@@ -11,7 +11,7 @@ public class InkomendeLeveringService {
         this.inkomendeLeveringRepository = inkomendeLeveringRepository;
     }
 
-    public int createInkomendeLevering(InkomendeLevering inkomendeLevering) {
+    public long createInkomendeLevering(InkomendeLevering inkomendeLevering) {
         return inkomendeLeveringRepository.createInkomendeLevering(inkomendeLevering);
     }
 
