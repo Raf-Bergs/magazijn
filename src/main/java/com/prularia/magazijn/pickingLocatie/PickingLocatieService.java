@@ -1,6 +1,6 @@
 package com.prularia.magazijn.pickingLocatie;
 
-import com.prularia.magazijn.magazijnplaats.MagazijnPlaatsRepository;
+import com.prularia.magazijn.magazijnplaats.MagazijnplaatsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,9 +11,9 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class PickingLocatieService {
 
-    private final MagazijnPlaatsRepository magazijnPlaatsRepository;
+    private final MagazijnplaatsRepository magazijnPlaatsRepository;
 
-    public PickingLocatieService(MagazijnPlaatsRepository magazijnPlaatsRepository) {
+    public PickingLocatieService(MagazijnplaatsRepository magazijnPlaatsRepository) {
         this.magazijnPlaatsRepository = magazijnPlaatsRepository;
     }
 
