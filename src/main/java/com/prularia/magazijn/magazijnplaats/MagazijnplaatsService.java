@@ -18,10 +18,6 @@ public class MagazijnplaatsService {
 
     @Transactional
     public void aanvullenInRek(AanvullenInRekDTO dto) {
-        // Controleer dat aantal positief is
-        if (dto.aantal() <= 0) {
-            throw new IllegalArgumentException("Aantal moet groter zijn dan 0.");
-        }
 
         // Haal het huidige aantal van de magazijnplaats op
         int huidigAantal = magazijnplaatsRepository.getHuidigAantalOpMagazijnplaats(dto.magazijnplaatsId());
