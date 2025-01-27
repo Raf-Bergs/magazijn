@@ -22,6 +22,17 @@ public class ArtikelRepository {
         return jdbcClient.sql(sql).param(id).query(Artikel.class).optional();
     }
 
+    public Optional<ArtikelDTO> findArtikelIdByEAN(String ean) {
+        var sql = """
+                select artikelId,ean, naam, beschrijving, voorraad
+                from artikelen
+                where ean = ?
+                """;
+        return jdbcClient.sql(sql)
+                .param(ean).query(ArtikelDTO.class)
+                .optional();
+    }
+
     public void pasStockAan(long artikelId, long aantal) {
         var sql = """
                   update artikelen
