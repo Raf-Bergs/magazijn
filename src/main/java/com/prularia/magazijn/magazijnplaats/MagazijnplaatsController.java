@@ -3,6 +3,8 @@ package com.prularia.magazijn.magazijnplaats;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/magazijnplaats")
 public class MagazijnplaatsController {
@@ -13,9 +15,9 @@ public class MagazijnplaatsController {
     }
 
     @PostMapping("/aanvullenInRek")
-    public String verwerkLevering(@RequestBody @Valid AanvullenInRekDTO dto) {
+    public String verwerkLevering(@RequestBody @Valid List<AanvullenInRekDTO> dtos) {
         try {
-            magazijnplaatsService.aanvullenInRek(dto);
+            magazijnplaatsService.aanvullenInRek(dtos);
             return "Levering succesvol verwerkt!";
         } catch (IllegalArgumentException e) {
             return e.getMessage();

@@ -4,6 +4,8 @@ import com.prularia.magazijn.artikel.ArtikelRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class MagazijnplaatsService {
@@ -17,8 +19,9 @@ public class MagazijnplaatsService {
     }
 
     @Transactional
-    public void aanvullenInRek(AanvullenInRekDTO dto) {
+    public void aanvullenInRek(List<AanvullenInRekDTO> dtos) {
 
+        for (AanvullenInRekDTO dto : dtos) {
         // Haal het huidige aantal van de magazijnplaats op
         int huidigAantal = magazijnplaatsRepository.getHuidigAantalOpMagazijnplaats(dto.magazijnplaatsId());
 
@@ -36,5 +39,6 @@ public class MagazijnplaatsService {
 
         // Specifieke magazijnplaats aanvullen
         magazijnplaatsRepository.aanvullenMagazijnplaats(dto.magazijnplaatsId(), dto.aantal());
+    }
     }
 }
