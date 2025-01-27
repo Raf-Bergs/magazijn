@@ -1,16 +1,17 @@
 package com.prularia.magazijn.inkomendeLevering;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class InkomendeLevering {
     private final long inkomendeLeveringId;
     private final long leveringId;
     private final String leveringsbonNummer;
-    private final LocalDateTime leveringsbondatum;
-    private final LocalDateTime leverDatum;
+    private final LocalDate leveringsbondatum;
+    private final LocalDate leverDatum;
     private final long ontvangerPersoneelslidId;
 
-    public InkomendeLevering(long inkomendeLeveringId, long leveringId, String leveringsbonNummer, LocalDateTime leveringsbondatum, LocalDateTime leverDatum, long ontvangerPersoneelslidId) {
+    public InkomendeLevering(long inkomendeLeveringId, long leveringId, String leveringsbonNummer, LocalDate leveringsbondatum, LocalDate leverDatum, long ontvangerPersoneelslidId) {
         this.inkomendeLeveringId = inkomendeLeveringId;
         this.leveringId = leveringId;
         this.leveringsbonNummer = leveringsbonNummer;
@@ -27,11 +28,11 @@ public class InkomendeLevering {
         return ontvangerPersoneelslidId;
     }
 
-    public LocalDateTime getLeverDatum() {
+    public LocalDate getLeverDatum() {
         return leverDatum;
     }
 
-    public LocalDateTime getLeveringsbondatum() {
+    public LocalDate getLeveringsbondatum() {
         return leveringsbondatum;
     }
 
