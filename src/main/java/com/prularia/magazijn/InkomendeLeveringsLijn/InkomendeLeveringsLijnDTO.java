@@ -1,10 +1,13 @@
 package com.prularia.magazijn.InkomendeLeveringsLijn;
 
-public record inkomendeLeveringsLijnDTO(
+public record InkomendeLeveringsLijnDTO(
         long inkomendeLeveringsId,
         long artikelId,
+        String naam,
+        String beschrijving,
         long aantalGoedgekeurd,
         long aantalTeruggestuurd,
-        long magazijnPlaatsId
+        long magazijnPlaatsId,
+        String plaats
 ) {
 }

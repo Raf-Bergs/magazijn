@@ -20,7 +20,7 @@ public class InkomendeLeveringsLijnRepository{
         return jdbcClient.sql(sql).params(inkomendeLeveringsLijn.getInkomendeLeveringsId(), inkomendeLeveringsLijn.getArtikelId(), inkomendeLeveringsLijn.getAantalGoedgekeurd(), inkomendeLeveringsLijn.getAantalTeruggestuurd(), inkomendeLeveringsLijn.getMagazijnPlaatsId()).update();
     }
 
-    public List<inkomendeLeveringsLijnDTO> getLeveringslijnenSortedByMagazijnplaatsId() {
+    public List<InkomendeLeveringsLijnDTO> getLeveringslijnenSortedByMagazijnplaatsId() {
         var sql = """
                    select il.inkomendeLeveringsId, il.artikelId,ar.naam,ar.beschrijving, il.aantalGoedgekeurd, il.aantalTeruggestuurd, il.magazijnPlaatsId,
                            concat(mp.rij, mp.rek) as plaats
@@ -30,7 +30,7 @@ public class InkomendeLeveringsLijnRepository{
                     order by il.magazijnPlaatsId
                 """;
         return jdbcClient.sql(sql)
-                .query(inkomendeLeveringsLijnDTO.class)
+                .query(InkomendeLeveringsLijnDTO.class)
                 .list();
     }
 

@@ -18,7 +18,7 @@ public class InkomendeLeveringsLijnService {
         return inkomendeLeveringsLijnRepository.createInkomendeLeveringsLijn(inkomendeLeverings);
     }
 
-    public List<inkomendeLeveringsLijnDTO>  getLeveringslijnenSortedByMagazijnplaatsId() {
+    public List<InkomendeLeveringsLijnDTO>  getLeveringslijnenSortedByMagazijnplaatsId() {
         return inkomendeLeveringsLijnRepository.getLeveringslijnenSortedByMagazijnplaatsId();
     }
 }
