@@ -14,9 +14,11 @@ public class InkomendeLeveringsLijnService {
     public InkomendeLeveringsLijnService(InkomendeLeveringsLijnRepository inkomendeLeveringsLijnRepository) {
         this.inkomendeLeveringsLijnRepository = inkomendeLeveringsLijnRepository;
     }
+    public int createInkomendeLeveringsLijn(InkomendeLeveringsLijn inkomendeLeverings) {
+        return inkomendeLeveringsLijnRepository.createInkomendeLeveringsLijn(inkomendeLeverings);
+    }
 
-
-    public List<InkomendeLeveringslijnDTO>  getLeveringslijnenSortedByMagazijnplaatsId() {
+    public List<inkomendeLeveringsLijnDTO>  getLeveringslijnenSortedByMagazijnplaatsId() {
         return inkomendeLeveringsLijnRepository.getLeveringslijnenSortedByMagazijnplaatsId();
     }
 }

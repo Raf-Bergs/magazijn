@@ -12,8 +12,15 @@ public class InkomendeLeveringsLijnRepository{
     public InkomendeLeveringsLijnRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
+    public int createInkomendeLeveringsLijn(InkomendeLeveringsLijn inkomendeLeveringsLijn) {
+        var sql = """
+                INSERT INTO inkomendeLeveringsLijnen (inkomendeLeveringsId, artikelId, aantalGoedgekeurd, aantalTeruggestuurd, magazijnPlaatsId)
+                VALUES (?, ?, ?, ?, ?);
+                """;
+        return jdbcClient.sql(sql).params(inkomendeLeveringsLijn.getInkomendeLeveringsId(), inkomendeLeveringsLijn.getArtikelId(), inkomendeLeveringsLijn.getAantalGoedgekeurd(), inkomendeLeveringsLijn.getAantalTeruggestuurd(), inkomendeLeveringsLijn.getMagazijnPlaatsId()).update();
+    }
 
-    public List<InkomendeLeveringslijnDTO> getLeveringslijnenSortedByMagazijnplaatsId() {
+    public List<inkomendeLeveringsLijnDTO> getLeveringslijnenSortedByMagazijnplaatsId() {
         var sql = """
                    select il.inkomendeLeveringsId, il.artikelId,ar.naam,ar.beschrijving, il.aantalGoedgekeurd, il.aantalTeruggestuurd, il.magazijnPlaatsId,
                            concat(mp.rij, mp.rek) as plaats
@@ -23,7 +30,7 @@ public class InkomendeLeveringsLijnRepository{
                     order by il.magazijnPlaatsId
                 """;
         return jdbcClient.sql(sql)
-                .query(InkomendeLeveringslijnDTO.class)
+                .query(inkomendeLeveringsLijnDTO.class)
                 .list();
     }
 

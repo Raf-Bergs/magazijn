@@ -16,7 +16,7 @@ public class InkomendeLeveringsLijnController {
         this.inkomendeLeveringsLijnService = inkomendeLeveringsLijnService;
     }
     @GetMapping
-    public List<InkomendeLeveringslijnDTO> getInkomendeLeveringslijn() {
+    public List<inkomendeLeveringsLijnDTO> getInkomendeLeveringslijn() {
         return inkomendeLeveringsLijnService.getLeveringslijnenSortedByMagazijnplaatsId();
     }
 }

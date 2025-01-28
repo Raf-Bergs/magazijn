@@ -1,4 +1,4 @@
-package com.prularia.magazijn.inkomendeLevering;
+package com.prularia.magazijn.InkomendeLeveringsLijn;
 
 public class InkomendeLeveringsLijn {
 

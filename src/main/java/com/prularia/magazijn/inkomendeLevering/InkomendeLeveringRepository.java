@@ -25,5 +25,4 @@ public class InkomendeLeveringRepository {
          return keyHolder.getKey().longValue();
     }
 
-
 }
