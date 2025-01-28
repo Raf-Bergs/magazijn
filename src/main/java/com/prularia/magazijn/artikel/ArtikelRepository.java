@@ -41,4 +41,17 @@ public class ArtikelRepository {
             }
         }
     }
+
+    // Artikelvoorraad aanvullen
+    public void voorraadAanvullen(long artikelId, int aantal) {
+        var sql = """
+            UPDATE artikelen
+            SET voorraad = voorraad + ?
+            WHERE artikelId = ?
+            """;
+
+        jdbcClient.sql(sql)
+                .params(aantal, artikelId)
+                .update();
+    }
 }
