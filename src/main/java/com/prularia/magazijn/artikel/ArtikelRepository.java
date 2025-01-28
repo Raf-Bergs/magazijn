@@ -22,6 +22,17 @@ public class ArtikelRepository {
         return jdbcClient.sql(sql).param(id).query(Artikel.class).optional();
     }
 
+    public Optional<ArtikelDTO> findArtikelIdByEAN(String ean) {
+        var sql = """
+                select artikelId,ean, naam, beschrijving, voorraad
+                from artikelen
+                where ean = ?
+                """;
+        return jdbcClient.sql(sql)
+                .param(ean).query(ArtikelDTO.class)
+                .optional();
+    }
+
     public void pasStockAan(long artikelId, long aantal) {
         var sql = """
                   update artikelen
@@ -40,5 +51,18 @@ public class ArtikelRepository {
                 throw new OnvoldoendeVoorraadException(artikelId, aantal);
             }
         }
+    }
+
+    // Artikelvoorraad aanvullen
+    public void voorraadAanvullen(long artikelId, int aantal) {
+        var sql = """
+            UPDATE artikelen
+            SET voorraad = voorraad + ?
+            WHERE artikelId = ?
+            """;
+
+        jdbcClient.sql(sql)
+                .params(aantal, artikelId)
+                .update();
     }
 }

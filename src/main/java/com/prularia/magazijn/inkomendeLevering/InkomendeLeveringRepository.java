@@ -10,11 +10,6 @@ public class InkomendeLeveringRepository {
 
     public InkomendeLeveringRepository(JdbcClient jdbcClient) {this.jdbcClient = jdbcClient;}
 
-    //var keyHolder = new GeneratedKeyHolder();
-    //jdbcClient.sql(sql)
-    //.params(...)
-    //.update(keyHolder);
-    //return keyHolder.getKey().longValue();
     public long createInkomendeLevering(InkomendeLevering inkomendeLevering) {
         var sql = """
                 INSERT INTO inkomendeLeveringen (leveranciersId, leveringsbonNummer, leveringsbondatum, leverDatum, ontvangerPersoneelslidId)

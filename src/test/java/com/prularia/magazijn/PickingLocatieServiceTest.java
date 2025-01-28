@@ -1,8 +1,5 @@
 package com.prularia.magazijn;
 
-
-
-
 import com.prularia.magazijn.magazijnplaats.MagazijnplaatsRepository;
 import com.prularia.magazijn.pickingLocatie.PickingLocatie;
 import com.prularia.magazijn.pickingLocatie.PickingLocatieService;
