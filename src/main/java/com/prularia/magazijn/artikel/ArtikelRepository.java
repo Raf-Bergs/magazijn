@@ -41,4 +41,14 @@ public class ArtikelRepository {
             }
         }
     }
+
+    public int vindMaxAantalInMagazijnPLaats(long artikelId) {
+        var sql = """
+                  select maxAantalInMagazijnPLaats
+                  from artikelen
+                  where artikelId = ?
+                  """;
+        return jdbcClient.sql(sql).param(artikelId).query(Integer.class).optional().orElseThrow(() ->
+                new ArtikelNietGevondenException(artikelId));
+    }
 }
