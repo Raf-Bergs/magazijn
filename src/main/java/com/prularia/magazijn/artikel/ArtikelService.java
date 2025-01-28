@@ -17,4 +17,7 @@ class ArtikelService {
     Optional<Artikel> findById(long id) {
         return artikelRepository.findById(id);
     }
+
+    ArtikelDTO findByEAN(String ean) {return artikelRepository.findArtikelIdByEAN(ean).
+            orElseThrow(() -> new ArtikelNietGevondenException(ean));}
 }
