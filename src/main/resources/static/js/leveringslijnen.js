@@ -1,14 +1,15 @@
 "use strict"
 import {byId, toon, verberg} from "./util.js";
 
+// TODO: leveringsId halen uit localStorage
 const leveringsId = localStorage.getItem("leveringsId");
+//byId("leveringsId").textContent = leveringsId;
 const leveringslijnen = await getLeveringslijnen(leveringsId);
 verwerkLeveringslijnen(leveringslijnen);
 
 async function getLeveringslijnen(leveringsId) {
-    // TODO: juiste url invullen
-    // juiste url is leveringslijnen
-    const response = await fetch("./leveringslijnen.json");
+    // juiste url is inkomendeleveringslijnen?
+    const response = await fetch("inkomendeleveringslijnen");
     if (response.ok) {
         verberg("storing");
         verberg("geenLeveringen");
@@ -49,9 +50,8 @@ function verwerkLeveringslijnen(leveringslijnen) {
         }
 
 
-        // TODO: namen van DTO juist zetten
         // locatie
-        tr.insertCell().textContent = leveringslijn.locatie;
+        tr.insertCell().textContent = leveringslijn.plaats;
 
         // artikel naam
         const naamCell = tr.insertCell();
@@ -65,7 +65,7 @@ function verwerkLeveringslijnen(leveringslijnen) {
         naamCell.appendChild(link);
 
         // aantal
-        tr.insertCell().textContent = `x${leveringslijn.aantal}`;
+        tr.insertCell().textContent = `x${leveringslijn.aantalGoedgekeurd}`;
     }
 }
 
@@ -79,7 +79,7 @@ byId("main").addEventListener("change", () => {
 
 byId("leveringVoltooidButton").addEventListener("click", async () => {
     // TODO: post request met levering voltooid naar juiste url
-    await fetch(`leveringVoltooid/${leveringsId}`, {
+    await fetch(`magazijnplaats/aanvullenInRek`, {
         method: "POST",
         body: JSON.stringify(leveringslijnen),
         headers: {
