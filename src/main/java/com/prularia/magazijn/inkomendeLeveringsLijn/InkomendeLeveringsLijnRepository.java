@@ -1,4 +1,4 @@
-package com.prularia.magazijn.InkomendeLeveringsLijn;
+package com.prularia.magazijn.inkomendeLeveringsLijn;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;

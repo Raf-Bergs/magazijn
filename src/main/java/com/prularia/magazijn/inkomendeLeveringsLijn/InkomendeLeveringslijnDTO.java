@@ -1,4 +1,4 @@
-package com.prularia.magazijn.InkomendeLeveringsLijn;
+package com.prularia.magazijn.inkomendeLeveringsLijn;
 
 public record InkomendeLeveringslijnDTO(
         long inkomendeLeveringsId,

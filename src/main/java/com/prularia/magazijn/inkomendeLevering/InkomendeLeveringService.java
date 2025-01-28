@@ -1,6 +1,8 @@
 package com.prularia.magazijn.inkomendeLevering;
 
 import com.google.common.collect.Lists;
+import com.prularia.magazijn.inkomendeLeveringsLijn.InkomendeLeveringsLijn;
+import com.prularia.magazijn.inkomendeLeveringsLijn.InkomendeOnvolledigeLeveringslijnDTO;
 import com.prularia.magazijn.artikel.ArtikelRepository;
 import com.prularia.magazijn.magazijnplaats.Magazijnplaats;
 import com.prularia.magazijn.magazijnplaats.MagazijnplaatsRepository;
@@ -28,16 +30,16 @@ public class InkomendeLeveringService {
         return inkomendeLeveringRepository.createInkomendeLevering(inkomendeLevering);
     }
 
-    public List<InkomendeLeveringslijnDTO> verwerkInkomendeLevering(long id) {
-        // TODO: Lees de levering als een List<InkomendeLeveringslijnDTO> of zo...
-        var inkomendeLeveringslijnen = leesInkomendeLeveringslijnen();
+    public List<InkomendeLeveringsLijn> vindBestePad(List<InkomendeOnvolledigeLeveringslijnDTO> inkomendeLeveringslijnen) {
         var alleCombinaties = new ArrayList<List<List<Magazijnplaats>>>();
+        var hoeveelhedenNodig = new HashMap<Long, Long>();
         for (var inkomendeLeveringslijn : inkomendeLeveringslijnen) {
             // Vind voor elke leveringslijn (artikel) alle mogelijke plaatsen
             var plaatsen = magazijnplaatsRepository.findPlaatsenByArtikelId(inkomendeLeveringslijn.artikelId());
 
             // Check voor elk artikel of er genoeg ruimte is in de plaatsen waar ze al staan
-            while (aantalBeschikbaar(plaatsen) < inkomendeLeveringslijn.aantalGoedgekeurd()) {
+            hoeveelhedenNodig.put(inkomendeLeveringslijn.artikelId(), inkomendeLeveringslijn.aantalGoedgekeurd());
+            while (aantalBeschikbaar(plaatsen) < hoeveelhedenNodig.get(inkomendeLeveringslijn.artikelId())) {
                 // Als niet genoeg: nieuwe plaatsen voorzien
                 createMagazijnplaats(inkomendeLeveringslijn.artikelId());
                 plaatsen = magazijnplaatsRepository.findPlaatsenByArtikelId(inkomendeLeveringslijn.artikelId());
@@ -52,7 +54,7 @@ public class InkomendeLeveringService {
         // Maak alle combinaties van verschillende opties voor de verschillende artikels
         var allePaden = Lists.cartesianProduct(alleCombinaties);
 
-        List<Magazijnplaats> bestePad = new ArrayList<Magazijnplaats>();
+        List<Magazijnplaats> bestePad = new ArrayList<>();
         var besteScore = Integer.MAX_VALUE;
         for (var pad : allePaden) {
             // Sorteer elke combo alfabetisch/volgens ophalen
@@ -64,9 +66,19 @@ public class InkomendeLeveringService {
                 bestePad = gesorteerdPad;
             }
         }
-        System.out.println(bestePad);
-        // TODO: transformeer Lijst van magazijnplaatsen naar lijst van inkomendeLeveringDTO
-        return inkomendeLeveringslijnen;
+
+        // Transformeer Lijst van magazijnplaatsen naar lijst van inkomendeLeveringLijnen
+        var resultaatLeveringsLijnen = new ArrayList<InkomendeLeveringsLijn>();
+        for (var plaats : bestePad) {
+            var onvolledigeInkomendeLeveringsLijn = inkomendeLeveringslijnen.stream().filter(lijn -> lijn.artikelId() == plaats.getArtikelId()).findFirst().orElse(null);
+            var aantalVoorDezeLijn = Math.min(hoeveelhedenNodig.get(plaats.getArtikelId()), plaats.getAantal());
+            // Het aantal nodig van dit artikel wordt verminderd met het aantal dat in deze lijn wordt toegevoegd
+            hoeveelhedenNodig.put(plaats.getArtikelId(), hoeveelhedenNodig.get(plaats.getArtikelId()) - aantalVoorDezeLijn);
+            var inkomendeLeveringsLijn = new InkomendeLeveringsLijn(onvolledigeInkomendeLeveringsLijn.leveringId(),
+                    onvolledigeInkomendeLeveringsLijn.artikelId(), aantalVoorDezeLijn, 0, plaats.getMagazijnPlaatsId());
+            resultaatLeveringsLijnen.add(inkomendeLeveringsLijn);
+        }
+        return resultaatLeveringsLijnen;
     }
 
     public List<List<Magazijnplaats>> combinatiesPerArtikel(List<Magazijnplaats> plaatsen) {
@@ -117,14 +129,5 @@ public class InkomendeLeveringService {
             scoreMap.put(plaats.getRij(), Math.max(scoreMap.getOrDefault(plaats.getRij(), 0L), plaats.getRek()));
         }
         return scoreMap.values().stream().mapToInt(Long::intValue).sum();
-    }
-
-    // Testfunctie
-    private List<InkomendeLeveringslijnDTO> leesInkomendeLeveringslijnen() {
-        var lijnen = new ArrayList<InkomendeLeveringslijnDTO>();
-        lijnen.add(new InkomendeLeveringslijnDTO(0, 1, "test1", "", 5, 0, 0, null));
-        lijnen.add(new InkomendeLeveringslijnDTO(0, 2, "test2", "", 4, 0, 0, null));
-        lijnen.add(new InkomendeLeveringslijnDTO(0, 3, "test3", "", 10, 0, 0, null));
-        return lijnen;
     }
 }
