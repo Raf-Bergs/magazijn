@@ -6,12 +6,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class InkomendeLeveringsLijnRepository{
+public class InkomendeLeveringsLijnRepository {
     private final JdbcClient jdbcClient;
 
     public InkomendeLeveringsLijnRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
+
     public int createInkomendeLeveringsLijn(InkomendeLeveringsLijn inkomendeLeveringsLijn) {
         var sql = """
                 INSERT INTO inkomendeLeveringsLijnen (inkomendeLeveringsId, artikelId, aantalGoedgekeurd, aantalTeruggestuurd, magazijnPlaatsId)
@@ -20,6 +21,8 @@ public class InkomendeLeveringsLijnRepository{
         return jdbcClient.sql(sql).params(inkomendeLeveringsLijn.getInkomendeLeveringsId(), inkomendeLeveringsLijn.getArtikelId(), inkomendeLeveringsLijn.getAantalGoedgekeurd(), inkomendeLeveringsLijn.getAantalTeruggestuurd(), inkomendeLeveringsLijn.getMagazijnPlaatsId()).update();
     }
 
+    //TODO: hier nakijken of dit wel correct werkt, normaal gezien zal je per inkomendeLeveringsID moeten zoeken, momenteel krijg je alles
+    //TODO: status nakijken van de inkomendeLevering
     public List<InkomendeLeveringsLijnDTO> getLeveringslijnenSortedByMagazijnplaatsId() {
         var sql = """
                    select il.inkomendeLeveringsId, il.artikelId,ar.naam,ar.beschrijving, il.aantalGoedgekeurd, il.aantalTeruggestuurd, il.magazijnPlaatsId,
@@ -33,6 +36,5 @@ public class InkomendeLeveringsLijnRepository{
                 .query(InkomendeLeveringsLijnDTO.class)
                 .list();
     }
-
 
 }
