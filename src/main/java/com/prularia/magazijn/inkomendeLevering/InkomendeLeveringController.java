@@ -1,6 +1,7 @@
 package com.prularia.magazijn.inkomendeLevering;
 
 import com.prularia.magazijn.InkomendeLeveringsLijn.inkomendeLeveringsLijnDTO;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +18,8 @@ public class InkomendeLeveringController {
         this.inkomendeLeveringService = inkomendeLeveringService;
     }
 
-    @PostMapping("/PostLevering")
-    public void methodenaam(@RequestBody long leveranciersId, String leveringsbonNummer, LocalDate leveringsbondatum, LocalDate leverDatum, List<inkomendeLeveringsLijnDTO> inkomendeLeveringslijnDTOList) {
+    @PostMapping("inkomendeLevering/{leveranciersId}")
+    public void methodenaam(@PathVariable long leveranciersId, @RequestBody String leveringsbonNummer, LocalDate leveringsbondatum, LocalDate leverDatum, List<inkomendeLeveringsLijnDTO> inkomendeLeveringslijnDTOList) {
         long inkomendeLeveringsId = inkomendeLeveringService.createInkomendeLevering(new InkomendeLevering(0L, leveranciersId, leveringsbonNummer, leveringsbondatum, leverDatum, ontvangerId));
         //TODO: DTO DOORGEVEN AAN M303: sorting algorithm
     }
