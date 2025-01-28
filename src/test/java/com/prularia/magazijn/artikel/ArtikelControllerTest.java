@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,5 +40,26 @@ class ArtikelControllerTest {
     @Test
     void findByIdWithNonExistingIdThrowsNotFound() throws Exception {
         mockMvc.perform(get("/artikelen/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void findByEANWithExistingEANFindsTheArtikel() throws Exception {
+        String ean = "5499999000019";
+        mockMvc.perform(post("/artikelen/{ean}", ean))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("ean").value(ean),
+                        jsonPath("artikelId").isNumber(),
+                        jsonPath("naam").isString(),
+                        jsonPath("beschrijving").isString(),
+                        jsonPath("voorraad").isNumber()
+                );
+    }
+
+    @Test
+    void findByEANWithNonExistingEANThrowsNotFound() throws Exception {
+        String nonExistingEAN = "9999999999999";
+        mockMvc.perform(post("/artikelen/{ean}", nonExistingEAN))
+                .andExpect(status().isNotFound());
     }
 }
