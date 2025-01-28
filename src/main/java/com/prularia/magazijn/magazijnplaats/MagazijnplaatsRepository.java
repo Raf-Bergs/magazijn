@@ -105,5 +105,13 @@ public class MagazijnplaatsRepository {
                   """;
         return jdbcClient.sql(sql).param(artikelId).query(Magazijnplaats.class).list();
     }
+
+    public int createMagazijnplaats(long artikelId, String rij, int rek) {
+        var sql = """
+                  insert into magazijnplaatsen (artikelId, rij, rek, aantal)
+                  values (?, ?, ?, 0)
+                  """;
+        return jdbcClient.sql(sql).params(artikelId, rij, rek).update();
+    }
 }
 

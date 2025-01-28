@@ -27,11 +27,10 @@ public class InkomendeLeveringService {
             var plaatsen = magazijnplaatsRepository.findPlaatsenByArtikelId(inkomendeLeveringslijn.artikelId());
 
             // Check voor elk artikel of er genoeg ruimte is in de plaatsen waar ze al staan
-            var aantalPlaatsenBeschikbaar = aantalBeschikbaar(plaatsen);
             while (aantalBeschikbaar(plaatsen) < inkomendeLeveringslijn.aantalGoedgekeurd()) {
-                // TODO: Als niet genoeg: nieuwe plaatsen voorzien
-                // creeer nieuwe magazijnplaats entry...
-
+                // Als niet genoeg: nieuwe plaatsen voorzien
+                createMagazijnplaats(inkomendeLeveringslijn.artikelId());
+                plaatsen = magazijnplaatsRepository.findPlaatsenByArtikelId(inkomendeLeveringslijn.artikelId());
             }
             // Maak alle mogelijke combinaties per artikel
             var alleCombinaties = combinatiesPerArtikel(plaatsen);
@@ -39,7 +38,6 @@ public class InkomendeLeveringService {
             var combinaties = alleCombinaties.stream().filter(combo -> aantalBeschikbaar(combo) >= inkomendeLeveringslijn.aantalGoedgekeurd());
         }
         // TODO: Maak alle combinaties van verschillende opties voor de verschillende artikels
-        combinaties.add();
         // TODO: Sorteer elke combo alfabetisch/volgens ophalen
         // TODO: Selecteer het beste pad
         return inkomendeLeveringslijnen;
@@ -70,7 +68,14 @@ public class InkomendeLeveringService {
     }
 
     private void createMagazijnplaats(long artikelId) {
-        
+        // Zeer inefficient: probeert gewoon plaatsen tot er 1 vrij is.
+        for (char rijInt = 'A'; rijInt <= 'A' + 26; rijInt++) {
+            for (var rek = 1; rek <= 60; rek++) {
+                if (magazijnplaatsRepository.createMagazijnplaats(artikelId, String.valueOf(rijInt), rek) != 0) {
+                    return;
+                }
+            }
+        }
     }
 
     // Testfunctie
