@@ -1,4 +1,4 @@
-package com.prularia.magazijn.InkomendeLeveringsLijn;
+package com.prularia.magazijn.inkomendeLeveringsLijn;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

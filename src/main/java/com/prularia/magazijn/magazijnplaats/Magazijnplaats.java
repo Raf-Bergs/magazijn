@@ -34,4 +34,9 @@ public class Magazijnplaats {
     public long getAantal() {
         return aantal;
     }
+
+    @Override
+    public String toString() {
+        return "Plaats: " + rij + rek + ", Aantal: " + aantal;
+    }
 }
