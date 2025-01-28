@@ -17,20 +17,19 @@ public class BestellingRepository {
     //eerste volgende bestelling zoeken
     public Optional<Long> findBestelling() {
         var sql = """
-            
-                SELECT bestelId
-            FROM bestellingen
-            WHERE bestellingsStatusId in (2, 4)-- Alleen bestellingen met status 'Betaald'
-            ORDER BY bestelDatum ASC
-            LIMIT 1
-            """;
+                
+                    SELECT bestelId
+                FROM bestellingen
+                WHERE bestellingsStatusId in (2, 4)-- Alleen bestellingen met status 'Betaald'
+                ORDER BY bestelDatum ASC
+                LIMIT 1
+                """;
         return jdbcClient.sql(sql).query(Long.class).optional();
     }
 
 
-
     public void updateStatusToKlaarmaken(long bestelId) {
-        var sql= """
+        var sql = """
                 UPDATE bestellingen
                 SET bestellingsStatusId = 4  -- status verandert naar 'klaarmaken(4)'
                 WHERE bestelId = ?
@@ -48,4 +47,14 @@ public class BestellingRepository {
                 """;
         return jdbcClient.sql(sql).param(bestelId).query(Long.class).single();
     }
+
+    public Optional<Long> findBestellingByBestelId(long bestelId) {
+        var sql = """
+                select bestelId
+                from bestellingen
+                where bestelId=?
+                """;
+        return jdbcClient.sql(sql).param(bestelId).query(Long.class).optional();
+    }
+
 }

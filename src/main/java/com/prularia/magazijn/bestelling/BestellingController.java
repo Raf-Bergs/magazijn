@@ -3,6 +3,7 @@ package com.prularia.magazijn.bestelling;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/bestellingen")
@@ -25,4 +26,11 @@ public class BestellingController {
         bestellingService.updateStatusToKlaarmaken(bestelId); // Zet op 'Klaarmaken'
         return bestelId;
     }
+
+    //dit kan gebruikt worden om te zien of de bestelling bestaat
+    @GetMapping("{id}")
+    public long findBestellingByBestelId(@PathVariable long id) {
+        return bestellingService.findBestellingByBestelId(id).orElseThrow(BestellingNietGevondenException::new);
+    }
+
 }
