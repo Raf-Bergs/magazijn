@@ -40,18 +40,12 @@ public class BestellingRepository {
                 .update();
     }
 
-    void rondBestellingAf(long bestelId) {
-        var sql =
-                """
-                  update bestellingen
-                     set bestellingsStatusId =
-                      (select bestellingsStatusId from
-                bestellingsstatussen where naam =
-                'Onderweg')
-                  where bestelId = ?
+    public long findKlantId(long bestelId) {
+        var sql = """
+                select klantId
+                from bestellingen
+                Where bestelId = ?
                 """;
-        if (jdbcClient.sql(sql).param(bestelId).update() == 0) {
-            throw new BestellingNietGevondenException(bestelId);
-        }
+        return jdbcClient.sql(sql).param(bestelId).query(Long.class).single();
     }
 }
