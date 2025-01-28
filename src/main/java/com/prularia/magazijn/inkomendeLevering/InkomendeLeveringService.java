@@ -1,5 +1,6 @@
 package com.prularia.magazijn.inkomendeLevering;
 
+import com.google.common.collect.Lists;
 import com.prularia.magazijn.artikel.ArtikelRepository;
 import com.prularia.magazijn.magazijnplaats.Magazijnplaats;
 import com.prularia.magazijn.magazijnplaats.MagazijnplaatsRepository;
@@ -22,6 +23,7 @@ public class InkomendeLeveringService {
     public List<InkomendeLeveringslijnDTO> verwerkInkomendeLevering(long id) {
         // TODO: Lees de levering als een List<InkomendeLeveringslijnDTO> of zo...
         var inkomendeLeveringslijnen = leesInkomendeLeveringslijnen();
+        var alleCombinaties = new ArrayList<List<List<Magazijnplaats>>>();
         for (var inkomendeLeveringslijn : inkomendeLeveringslijnen) {
             // Vind voor elke leveringslijn (artikel) alle mogelijke plaatsen
             var plaatsen = magazijnplaatsRepository.findPlaatsenByArtikelId(inkomendeLeveringslijn.artikelId());
@@ -33,13 +35,29 @@ public class InkomendeLeveringService {
                 plaatsen = magazijnplaatsRepository.findPlaatsenByArtikelId(inkomendeLeveringslijn.artikelId());
             }
             // Maak alle mogelijke combinaties per artikel
-            var alleCombinaties = combinatiesPerArtikel(plaatsen);
+            var mogelijkeCombinaties = combinatiesPerArtikel(plaatsen);
             // Enkel combos houden die genoeg plaats hebben
-            var combinaties = alleCombinaties.stream().filter(combo -> aantalBeschikbaar(combo) >= inkomendeLeveringslijn.aantalGoedgekeurd());
+            var combinaties = mogelijkeCombinaties.stream().filter(combo ->
+                    !combo.isEmpty() && aantalBeschikbaar(combo) >= inkomendeLeveringslijn.aantalGoedgekeurd()).toList();
+            alleCombinaties.add(combinaties);
         }
-        // TODO: Maak alle combinaties van verschillende opties voor de verschillende artikels
-        // TODO: Sorteer elke combo alfabetisch/volgens ophalen
-        // TODO: Selecteer het beste pad
+        // Maak alle combinaties van verschillende opties voor de verschillende artikels
+        var allePaden = Lists.cartesianProduct(alleCombinaties);
+
+        List<Magazijnplaats> bestePad = new ArrayList<Magazijnplaats>();
+        var besteScore = Integer.MAX_VALUE;
+        for (var pad : allePaden) {
+            // Sorteer elke combo alfabetisch/volgens ophalen
+            var gesorteerdPad = maakGesorteerdPad(pad);
+            var score = berekenScore(gesorteerdPad);
+            // Selecteer het beste pad
+            if (score < besteScore) {
+                besteScore = score;
+                bestePad = gesorteerdPad;
+            }
+        }
+        System.out.println(bestePad);
+        // TODO: transformeer Lijst van magazijnplaatsen naar lijst van inkomendeLeveringDTO
         return inkomendeLeveringslijnen;
     }
 
@@ -76,6 +94,21 @@ public class InkomendeLeveringService {
                 }
             }
         }
+    }
+
+    private List<Magazijnplaats> maakGesorteerdPad(List<List<Magazijnplaats>> plaatsen) {
+        var resultaatPad = new ArrayList<Magazijnplaats>();
+        plaatsen.forEach(resultaatPad::addAll);
+        resultaatPad.sort(Comparator.comparing(magazijnplaats -> magazijnplaats.getRij() + magazijnplaats.getRek()));
+        return resultaatPad;
+    }
+
+    private int berekenScore(List<Magazijnplaats> gesorteerdePlaatsen) {
+        var scoreMap = new HashMap<String, Long>();
+        for (var plaats : gesorteerdePlaatsen) {
+            scoreMap.put(plaats.getRij(), Math.max(scoreMap.getOrDefault(plaats.getRij(), 0L), plaats.getRek()));
+        }
+        return scoreMap.values().stream().mapToInt(Long::intValue).sum();
     }
 
     // Testfunctie
