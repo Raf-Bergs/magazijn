@@ -1,6 +1,7 @@
 package com.prularia.magazijn.inkomendeLevering;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,16 +17,10 @@ public class InkomendeLeveringController {
         this.inkomendeLeveringService = inkomendeLeveringService;
     }
 
-    @GetMapping
-    public void leveringen() {
-        System.out.println(inkomendeLeveringService.vindMagazijnPlaatsen(maakInkomendeLeveringslijnen()));
-    }
-
-    private List<InkomendeLeveringslijnDTO> maakInkomendeLeveringslijnen() {
-        var lijnen = new ArrayList<InkomendeLeveringslijnDTO>();
-        lijnen.add(new InkomendeLeveringslijnDTO(1, "test1", "", 5, 0, null));
-        lijnen.add(new InkomendeLeveringslijnDTO(2, "test2", "", 4, 0, null));
-        lijnen.add(new InkomendeLeveringslijnDTO(3, "test3", "", 10, 0, null));
-        return lijnen;
+    @GetMapping("{id}")
+    public List<InkomendeLeveringslijnDTO> leveringen(@PathVariable long id) {
+        var result = inkomendeLeveringService.verwerkInkomendeLevering(id);
+        System.out.println(result);
+        return result;
     }
 }
