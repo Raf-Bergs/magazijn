@@ -52,4 +52,9 @@ public class BestellingService {
         }
         // TODO: Testen :)
     }
+
+    @Transactional
+    public Optional<Long> findBestellingByBestelId(long bestelId) {
+        return bestellingRepository.findBestellingByBestelId(bestelId);
+    }
 }
