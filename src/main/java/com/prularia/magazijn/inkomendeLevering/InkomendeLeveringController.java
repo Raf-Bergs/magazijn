@@ -16,11 +16,4 @@ public class InkomendeLeveringController {
     public InkomendeLeveringController(InkomendeLeveringService inkomendeLeveringService) {
         this.inkomendeLeveringService = inkomendeLeveringService;
     }
-
-    @GetMapping("{id}")
-    public List<InkomendeLeveringslijnDTO> leveringen(@PathVariable long id) {
-        var result = inkomendeLeveringService.verwerkInkomendeLevering(id);
-        System.out.println(result);
-        return result;
-    }
 }

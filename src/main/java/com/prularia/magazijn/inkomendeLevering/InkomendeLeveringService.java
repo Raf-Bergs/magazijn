@@ -26,6 +26,7 @@ public class InkomendeLeveringService {
     @Transactional
     public int createInkomendeLevering(InkomendeLevering inkomendeLevering) {
         return inkomendeLeveringRepository.createInkomendeLevering(inkomendeLevering);
+    }
 
     public List<InkomendeLeveringslijnDTO> verwerkInkomendeLevering(long id) {
         // TODO: Lees de levering als een List<InkomendeLeveringslijnDTO> of zo...
