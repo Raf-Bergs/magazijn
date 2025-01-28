@@ -4,6 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record AanvullenInRekDTO(@NotNull @Positive Long artikelId,
-                                @NotNull @Positive Long magazijnplaatsId,
-                                @NotNull @Positive Integer aantal) {
+                                @NotNull @Positive Long magazijnPlaatsId,
+                                @NotNull @Positive Integer aantalGoedgekeurd) {
 }

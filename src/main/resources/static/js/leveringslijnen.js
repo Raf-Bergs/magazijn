@@ -3,7 +3,10 @@ import {byId, toon, verberg} from "./util.js";
 
 // TODO: leveringsId halen uit localStorage
 const leveringsId = localStorage.getItem("leveringsId");
-//byId("leveringsId").textContent = leveringsId;
+if (leveringsId) {
+    byId("leveringsId").textContent = leveringsId;
+}
+
 const leveringslijnen = await getLeveringslijnen(leveringsId);
 verwerkLeveringslijnen(leveringslijnen);
 
@@ -78,7 +81,6 @@ byId("main").addEventListener("change", () => {
 });
 
 byId("leveringVoltooidButton").addEventListener("click", async () => {
-    // TODO: post request met levering voltooid naar juiste url
     await fetch(`magazijnplaats/aanvullenInRek`, {
         method: "POST",
         body: JSON.stringify(leveringslijnen),
@@ -88,5 +90,6 @@ byId("leveringVoltooidButton").addEventListener("click", async () => {
     });
     localStorage.clear();
     sessionStorage.clear();
-    window.location = "levering.html"
+    // TODO: html pagina van begin
+    //window.location = "levering.html"
 })

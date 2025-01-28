@@ -22,23 +22,23 @@ public class MagazijnplaatsService {
     public void aanvullenInRek(List<AanvullenInRekDTO> dtos) {
 
         for (AanvullenInRekDTO dto : dtos) {
-        // Haal het huidige aantal van de magazijnplaats op
-        int huidigAantal = magazijnplaatsRepository.getHuidigAantalOpMagazijnplaats(dto.magazijnplaatsId());
+        // Haal het huidige aantalGoedgekeurd van de magazijnplaats op
+        int huidigAantal = magazijnplaatsRepository.getHuidigAantalOpMagazijnplaats(dto.magazijnPlaatsId());
 
-        // Haal het maximale aantal in de magazijnplaats op
+        // Haal het maximale aantalGoedgekeurd in de magazijnplaats op
         int maxAantal = magazijnplaatsRepository.getMaxAantalInMagazijnplaats(dto.artikelId());
 
-        // Controleer of het aantal niet boven de limiet uitkomt
-        if (huidigAantal + dto.aantal() > maxAantal) {
-            throw new IllegalArgumentException("De som van het huidig aantal en toegevoegd aantal overschrijdt de limiet van de magazijnplaats.");
+        // Controleer of het aantalGoedgekeurd niet boven de limiet uitkomt
+        if (huidigAantal + dto.aantalGoedgekeurd() > maxAantal) {
+            throw new IllegalArgumentException("De som van het huidig aantalGoedgekeurd en toegevoegd aantalGoedgekeurd overschrijdt de limiet van de magazijnplaats.");
 
         }
 
         // Voorraad aanvullen in artikelen
-        artikelRepository.voorraadAanvullen(dto.artikelId(), dto.aantal());
+        artikelRepository.voorraadAanvullen(dto.artikelId(), dto.aantalGoedgekeurd());
 
         // Specifieke magazijnplaats aanvullen
-        magazijnplaatsRepository.aanvullenMagazijnplaats(dto.magazijnplaatsId(), dto.aantal());
+        magazijnplaatsRepository.aanvullenMagazijnplaats(dto.magazijnPlaatsId(), dto.aantalGoedgekeurd());
     }
     }
 }

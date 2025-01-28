@@ -97,7 +97,7 @@ public class MagazijnplaatsRepository {
         }
     }
 
-    // Het aantal op een specifieke magazijnplaats aanvullen
+    // Het aantalGoedgekeurd op een specifieke magazijnplaats aanvullen
     public void aanvullenMagazijnplaats(long magazijnPlaatsId, int aantal) {
         var sql = """
             UPDATE magazijnplaatsen
@@ -110,7 +110,7 @@ public class MagazijnplaatsRepository {
                 .update();
     }
 
-    // Het huidige aantal op een magazijnplaats ophalen
+    // Het huidige aantalGoedgekeurd op een magazijnplaats ophalen
     public int getHuidigAantalOpMagazijnplaats(long magazijnPlaatsId) {
         var sql = """
             SELECT aantal
