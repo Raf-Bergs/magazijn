@@ -8,4 +8,8 @@ public class ArtikelNietGevondenException extends RuntimeException {
     public ArtikelNietGevondenException(long artikelId) {
         super("Artikel niet gevonden : " + artikelId);
     }
+
+    public ArtikelNietGevondenException(String ean) {
+        super("Artikel niet gevonden. ean: " + ean);
+    }
 }

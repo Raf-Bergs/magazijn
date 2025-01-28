@@ -97,6 +97,47 @@ public class MagazijnplaatsRepository {
         }
     }
 
+    // Het aantal op een specifieke magazijnplaats aanvullen
+    public void aanvullenMagazijnplaats(long magazijnPlaatsId, int aantal) {
+        var sql = """
+            UPDATE magazijnplaatsen
+            SET aantal = aantal + ?
+            WHERE magazijnPlaatsId = ?
+            """;
+
+        jdbcClient.sql(sql)
+                .params(aantal, magazijnPlaatsId)
+                .update();
+    }
+
+    // Het huidige aantal op een magazijnplaats ophalen
+    public int getHuidigAantalOpMagazijnplaats(long magazijnPlaatsId) {
+        var sql = """
+            SELECT aantal
+            FROM magazijnplaatsen
+            WHERE magazijnPlaatsId = ?
+            """;
+
+        return jdbcClient.sql(sql)
+                .param(magazijnPlaatsId)
+                .query(int.class)
+                .single();
+    }
+
+    // De maximale capaciteit van een magazijnplaats ophalen
+    public int getMaxAantalInMagazijnplaats(long artikelId) {
+        var sql = """
+            SELECT maxAantalInMagazijnPlaats
+            FROM artikelen
+            WHERE artikelId = ?
+            """;
+
+        return jdbcClient.sql(sql)
+                .param(artikelId)
+                .query(int.class)
+                .single();
+    }
+
     public List<Magazijnplaats> findPlaatsenByArtikelId(long artikelId) {
         var sql = """
                   select magazijnPlaatsId, artikelId, rij, rek, aantal
